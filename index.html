@@ -425,13 +425,6 @@ details.more[open] summary{border-bottom:1px solid var(--line)}
 .mscrim{position:fixed;inset:0;background:rgba(10,10,16,.4);z-index:19}
 .dialog.wide{width:min(940px,100%)} .dialog.wide .paper-wrap{padding:16px}
 .dash{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
-.heat{min-width:38px;height:30px;border-radius:8px;border:0;font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg);background:color-mix(in srgb,var(--brand) var(--h),var(--surface))}
-.heat:hover{box-shadow:0 0 0 3px var(--brand-soft)}
-.kanban{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:10px;padding:0 16px 16px;overflow-x:auto}
-.kcol{background:var(--sunk);border-radius:var(--r-lg);padding:8px;display:flex;flex-direction:column;gap:8px;min-height:120px}
-.kcol-h{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted);padding:2px 4px}
-.kcard{border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:10px;text-align:left;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow-sm);color:var(--fg)}
-.kcard:hover{border-color:var(--brand-line)}
 .sess{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;padding:14px 20px;border-top:1px solid var(--line)}
 .sess.wide{grid-template-columns:110px minmax(0,1fr) auto;align-items:center}
 .sess:first-of-type{border-top:0}
@@ -458,6 +451,50 @@ details.more[open] summary{border-bottom:1px solid var(--line)}
 .review{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:16px}
 @media (max-width:1100px){ .dash,.review{grid-template-columns:minmax(0,1fr)} .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))} .frow{grid-template-columns:repeat(2,minmax(0,1fr)) 34px} }
 @media (max-width:860px){ .fgrid,.frow{grid-template-columns:minmax(0,1fr)} .fgrid .w2{grid-column:auto} .sess.wide{grid-template-columns:minmax(0,1fr)} }
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 50% -10%,var(--brand-soft),transparent 70%),var(--bg)}
+.login-card{width:min(400px,100%);padding:28px;display:flex;flex-direction:column;gap:18px;box-shadow:var(--shadow)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi2{all:unset;cursor:pointer;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto auto;column-gap:12px;row-gap:2px;padding:18px 20px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.kpi2:hover{border-color:var(--brand-line);box-shadow:var(--shadow)}
+.kpi2-i{grid-row:1 / span 3;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand)}
+.kpi2-l{font-size:12.5px;color:var(--muted);font-weight:500}
+.kpi2 b{font-size:26px;font-weight:600;line-height:1.15;letter-spacing:-.02em}
+.acards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.acard{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm);min-width:0;transition:box-shadow .15s,border-color .15s,transform .15s}
+.acard:hover{border-color:var(--brand-line);box-shadow:var(--shadow);transform:translateY(-1px)}
+.acard-n{display:block;font-size:15.5px;font-weight:600}
+.acard .small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em;line-height:1.45}
+.acard > .row{align-items:flex-start!important}
+.acard-v{display:flex;align-items:baseline;gap:6px}
+.acard-v b{font-size:34px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.sbar{display:flex;gap:3px;height:8px;border-radius:5px;overflow:hidden}
+.sbar span{border-radius:3px}
+.acard-l{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted)}
+.acard-l span{display:flex;align-items:center;gap:7px}
+.acard-l b{margin-left:auto;color:var(--fg);font-weight:600}
+.acard-l i,.legend i{width:8px;height:8px;border-radius:3px;display:inline-block;flex:none}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.prow{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:grid;grid-template-columns:minmax(170px,1.1fr) 120px minmax(80px,1fr) 30px 16px;gap:16px;align-items:center;padding:13px 20px;border-top:1px solid var(--line)}
+.prow:hover{background:var(--hover)}
+.prow-s{display:flex;align-items:center;gap:12px}
+.prow-s b{display:block;font-weight:600;font-size:13.5px}
+.prow .sn{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.avs{display:flex}
+.av.sm{width:28px;height:28px;font-size:10.5px;background:var(--sunk);color:var(--fg);box-shadow:0 0 0 2px var(--surface);margin-left:-6px}
+.avs .av.sm:first-child{margin-left:0}
+.av.sm.more{background:var(--surface);color:var(--muted);box-shadow:0 0 0 2px var(--surface),inset 0 0 0 1px var(--line)}
+.ptrack{height:6px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.ptrack span{display:block;height:100%;border-radius:4px}
+.pcount{text-align:right;font-size:15px}
+.srow{display:flex;gap:14px;align-items:center;padding:13px 20px;border-top:1px solid var(--line)}
+.sdate{width:74px;flex:none;display:flex;flex-direction:column;padding:6px 8px;border-radius:8px;background:var(--sunk);text-align:center}
+.sdate b{font-size:12.5px} .sdate span{font-size:11.5px;color:var(--muted)}
+.sdate.today{background:var(--brand-soft)} .sdate.today b{color:var(--brand-ink)}
+@media (max-width:1180px){ .acards{grid-template-columns:repeat(3,minmax(0,1fr))} .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:860px){ .acards{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .prow{grid-template-columns:minmax(0,1fr) auto 30px 16px} .prow .ptrack{display:none} .legend{display:none} }
+@media (max-width:520px){ .acards,.kpis{grid-template-columns:minmax(0,1fr)} }
 /* paper form */
 .paper-wrap{background:var(--sunk);border-radius:14px;padding:24px;overflow-x:auto}
 .paper{background:var(--paper);color:var(--paper-ink);width:800px;margin:0 auto;box-shadow:0 2px 14px rgba(0,0,0,.16);padding:36px 40px 40px;font-size:11.5px;position:relative;font-family:var(--font)}
@@ -900,7 +937,7 @@ const CUSTOMERS = [
 const UNLINKED_FOLDERS = ['Dr C Walker - 2024','Walker Chris (ortho)','Misc scans','T Brooks dental 2025'];
 /* ============ STATE ============ */
 const S = {
-  role:'adviser', view:'dash', cust:'kas', tab:'profile', cl:'credit', clFilter:'all',
+  role:'adviser', view:'dash', authed:false, loginRole:'adviser', loginErr:'', cust:'kas', tab:'profile', cl:'credit', clFilter:'all',
   cfg:{screen:'home', area:'credit', prod:'anz-var', dtab:null, inc:'PAYG', pv:'PAYG'},
   vc:'kas', vmode:'folders', vpath:null, vfilter:'all',
   drive:true, rescanned:false, scanning:false, scanPct:0, showSrc:true, formAnim:false,
@@ -1054,14 +1091,13 @@ function userMenu(){
   const me=ME[S.role];
   return `<div class="menu up" role="menu" data-stop>
     <div class="menu-h"><b style="display:block">${me.n}</b><span class="small">${me.e}</span></div>
-    <div class="menu-l">View as · prototype</div>
-    ${[['adviser','Adviser','strat'],['team','Team member','users'],['admin','Client admin','sliders']].map(([k,l,ic])=>`<button class="menu-i" role="menuitemradio" aria-checked="${S.role===k}" data-act="role" data-v="${k}">${I(ic)}${l}${S.role===k?`<span class="tick">${I('check')}</span>`:''}</button>`).join('')}
+    <button class="menu-i" data-act="signout" data-v="switch">${I('users')}Switch view<span class="tick faint" style="color:var(--faint);font-size:12px">${me.r.split(' · ')[0]}</span></button>
     <div class="menu-sep"></div>
     <button class="menu-i" data-act="toast" data-v="Profile settings">${I('user')}Profile</button>
     <button class="menu-i" data-act="toast" data-v="Notification and display preferences">${I('gear')}Preferences</button>
     <button class="menu-i" data-act="toast" data-v="Help centre and keyboard shortcuts">${I('help')}Help & shortcuts</button>
     <div class="menu-sep"></div>
-    <button class="menu-i" data-act="toast" data-v="Signed out (prototype)">${I('logout')}Sign out</button></div>`;
+    <button class="menu-i" data-act="signout">${I('logout')}Sign out</button></div>`;
 }
 function notifMenu(){
   const list = S.role==='admin'
@@ -1074,11 +1110,26 @@ function topbar(){
   return `<header class="tb"><button class="ibtn mobile-only" aria-label="Menu" data-act="mnav">${I('menu')}</button>
     <div class="crumbs">${crumbs()}</div><span class="grow"></span>
     <label class="search hide-sm">${I('search')}<input placeholder="${S.role==='admin'?'Search products, providers, documents':'Search clients, documents'}" aria-label="Search" data-search><span class="kbd">⌘K</span></label>
-    <button class="rolechip hide-sm" data-act="menu" data-v="user" title="Prototype: switch role">Viewing as ${ME[S.role].r.split(' · ')[0]}${I('chevD')}</button>
+    <button class="rolechip hide-sm" data-act="signout" data-v="switch" title="Sign in to a different view">Viewing as ${ME[S.role].r.split(' · ')[0]}${I('chevD')}</button>
     <div class="pop-wrap"><button class="ibtn" aria-label="Notifications" data-act="menu" data-v="notif">${I('bell')}<span class="dot"></span></button>${S.menu==='notif'?notifMenu():''}</div>
     <button class="ibtn hide-sm" aria-label="Help" data-act="toast" data-v="Help centre (prototype)">${I('help')}</button></header>`;
 }
+const VIEWS_LOGIN = [['adviser','Adviser','Dashboard, clients, sessions and new client fact finds'],['team','Team member','Client records, checklists, issues, application forms and the Vault'],['admin','Client admin','Advice areas, products, document rules and Vault settings']];
+function loginScreen(){
+  const pick=S.loginRole||'adviser';
+  return `<div class="login"><form class="login-card panel" id="login" autocomplete="off" novalidate>
+    <div class="row" style="gap:12px"><span class="mark" style="width:40px;height:40px;border-radius:10px">${logo()}</span><div><b style="font-size:17px;display:block">Othello Vault</b><span class="small">Medcentric workspace</span></div></div>
+    <div class="stack" style="gap:4px"><h1 style="font-size:22px">Sign in</h1><span class="sub">Choose the view you want to see.</span></div>
+    <div class="field"><label for="lg-role">View as</label><select class="in" id="lg-role" data-login-role>${VIEWS_LOGIN.map(([k,l])=>`<option value="${k}" ${k===pick?'selected':''}>${l}</option>`).join('')}</select>
+      <span class="small" id="lg-desc">${VIEWS_LOGIN.find(v=>v[0]===pick)[2]}</span></div>
+    <div class="field"><label for="lg-pw">Password</label><input class="in" id="lg-pw" type="password" autocomplete="current-password" placeholder="Enter password" ${S.loginErr?'aria-invalid="true" style="border-color:var(--bad)"':''}>
+      ${S.loginErr?`<span class="small" role="alert" style="color:var(--bad)">${esc(S.loginErr)}</span>`:''}</div>
+    <button class="btn primary" type="submit" style="height:42px;justify-content:center;width:100%">Sign in</button>
+    <span class="small faint" style="text-align:center">Prototype · all client data is fictional</span>
+  </form></div>`;
+}
 function render(){
+  if (!S.authed){ $('#app').innerHTML = loginScreen() + (S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:''); const pw=$('#lg-pw'); if(pw) pw.focus(); return; }
   if (S.role!=='admin' && S.view==='config') S.view = S.role==='adviser'?'dash':'clients';
   if (S.role==='team' && ['dash','sessions','newclient'].includes(S.view)) S.view='clients';
   if (S.role==='admin' && ['clients','client','dash','sessions','newclient'].includes(S.view)) S.view='config';
@@ -1123,7 +1174,7 @@ const initials = n => n.replace(/^Drs? /,'').split(/[ &]+/).filter(Boolean).slic
 VIEWS.clients = () => {
   const tv=countStatus('received'), iss=openDisc().length, vx=unmatched().length+noFolder().length, pend=S.recs.filter(r=>r.status==='Pending').length;
   const af=S.crmArea||'all';
-  const cs=S.crmStage; const rows=S.customers.filter(c=>(af==='all'||c.areas.includes(af))&&(!cs||(cs.a==='all'?(cs.i===0?c.stage<=1:c.stage===cs.i):AREA_STAGE[c.id]&&AREA_STAGE[c.id][cs.a]===cs.i)));
+  const cs=S.crmStage; const rows=S.customers.filter(c=>(af==='all'||c.areas.includes(af))&&(!cs||(cs.a==='stage'?c.stage===cs.i:cs.a==='all'?(cs.i===0?c.stage<=1:c.stage===cs.i):AREA_STAGE[c.id]&&AREA_STAGE[c.id][cs.a]===cs.i)));
   return `<div class="stack">
   <div class="head"><div class="stack" style="gap:4px"><h1>Clients</h1><span class="sub">Every Medcentric client — contact details, household, advice areas and where they’re up to.</span></div>
     <div class="row"><button class="btn" data-act="toast" data-v="Export client list (CSV)">Export</button><button class="btn primary" data-act="newClient">${I('plus')}New client</button></div></div>
@@ -1134,7 +1185,7 @@ VIEWS.clients = () => {
     <button class="stat" data-act="go" data-v="strategy"><b>${pend}</b><small>Awaiting client decision</small></button>
   </div>
   <div class="row"><label class="search" style="width:300px">${I('search')}<input placeholder="Search by name, profession or suburb" aria-label="Search clients" data-crm></label>
-    <span class="seg">${[['all','All']].concat(AREAS.map(a=>[a.id,a.name])).map(([k,l])=>`<button class="${af===k?'on':''}" data-act="crmArea" data-v="${k}">${l}</button>`).join('')}</span>${cs?`<button class="chip" data-act="crmClear" style="border:0;background:var(--brand-soft);color:var(--brand-ink)">${cs.a==='all'?'':areaName(cs.a)+' · '}${cs.a==='all'&&cs.i===0?'Discovery or strategy':STAGES[cs.i]} ${I('x')}</button>`:''}</div>
+    <span class="seg">${[['all','All']].concat(AREAS.map(a=>[a.id,a.name])).map(([k,l])=>`<button class="${af===k?'on':''}" data-act="crmArea" data-v="${k}">${l}</button>`).join('')}</span>${cs?`<button class="chip" data-act="crmClear" style="border:0;background:var(--brand-soft);color:var(--brand-ink)">${cs.a==='all'||cs.a==='stage'?'':areaName(cs.a)+' · '}${cs.a==='all'&&cs.i===0?'Discovery or strategy':STAGES[cs.i]} ${I('x')}</button>`:''}</div>
   <div class="panel" style="overflow:hidden"><div class="tablewrap">
     <div class="th g-crm"><div>Client</div><div>Contact</div><div>Areas</div><div>Stage</div><div>Next action</div><div></div></div>
     ${rows.map(c=>{const x=CRM[c.id];return `<button class="tr g-crm" data-act="openCust" data-v="${c.id}" data-q="${esc((c.name+' '+x.prof+' '+x.sub).toLowerCase())}">
@@ -1357,36 +1408,50 @@ const SESS_IC = {'Discovery':'note','Strategy presentation':'strat','Handover':'
 
 const STAGE_SHORT=['Discovery','Strategy','Sign-off','Documents','Preparation','Submitted'];
 VIEWS.dash = () => {
-  const cs=S.customers, active=cs.length, disc=cs.filter(c=>c.stage<=1).length, pend=S.recs.filter(r=>r.status==='Pending').length, prep=Object.values(AREA_STAGE).reduce((n,a)=>n+Object.values(a).filter(s=>s===4).length,0);
-  const cnt=(a,i)=>cs.filter(c=>AREA_STAGE[c.id]&&AREA_STAGE[c.id][a]===i).length;
-  const max=Math.max(1,...AREAS.flatMap(a=>STAGES.map((_,i)=>cnt(a.id,i))));
-  const matrix=`<div class="cat"><table><thead><tr><th>Area</th>${STAGE_SHORT.map(s=>`<th class="pv" style="min-width:74px">${s}</th>`).join('')}<th class="r" style="text-align:right">Total</th></tr></thead><tbody>
-    ${AREAS.map(a=>`<tr><td><span class="alabel">${tile(a.id,'sm')}${a.name}</span></td>${STAGES.map((_,i)=>{const n=cnt(a.id,i);return `<td class="pc">${n?`<button class="heat" style="--h:${Math.round(18+62*n/max)}%" data-act="crmStage" data-v="${a.id}:${i}" title="${n} ${a.name} client${n>1?'s':''} at ${STAGES[i]}">${n}</button>`:'<span class="faint">·</span>'}</td>`}).join('')}<td class="num" style="text-align:right;font-weight:600">${STAGES.reduce((t,_,i)=>t+cnt(a.id,i),0)}</td></tr>`).join('')}
-  </tbody></table></div>`;
-  const kan=`<div class="kanban">${STAGE_SHORT.map((s,i)=>{const list=cs.filter(c=>c.stage===i);return `<div class="kcol"><div class="kcol-h"><span>${s}</span><span class="num faint">${list.length}</span></div>${list.map(c=>{const x=CRM[c.id];return `<button class="kcard" data-act="openCust" data-v="${c.id}"><span class="row" style="gap:8px;flex-wrap:nowrap"><span class="av" style="width:24px;height:24px;font-size:10px;background:var(--sunk);color:var(--fg)">${initials(x.lead)}</span><b style="font-size:13px;line-height:1.25">${esc(c.name.replace(/ \(.*\)/,''))}</b></span><span class="small">${esc(x.prof)}</span><span class="row" style="gap:3px">${c.areas.map(a=>tile(a,'sm')).join('')}</span></button>`}).join('')||'<span class="small" style="padding:8px">None</span>'}</div>`}).join('')}</div>`;
-  const up=SESSIONS.slice(0,4);
-  return `<div class="stack">
-  <div class="head"><div class="stack" style="gap:4px"><h1>Good morning, James</h1><span class="sub">Thursday 8 October · ${up.filter(s=>s.day==='Today').length} session today · ${pend} client decisions outstanding</span></div>
+  const cs=S.customers, pend=S.recs.filter(r=>r.status==='Pending').length;
+  const today=SESSIONS.filter(s=>s.day==='Today'&&!s.done).length;
+  const stageCount=i=>cs.filter(c=>c.stage===i).length;
+  const shade=i=>`color-mix(in srgb,var(--brand) ${[22,36,50,64,80,100][i]}%,var(--surface))`;
+  const kpis=[
+    ['users','Active clients',cs.length,'Across 5 advice areas','nav','clients'],
+    ['note','In discovery',cs.filter(c=>c.stage<=1).length,`${today} fact find${today===1?'':'s'} today`,'crmStage','all:0'],
+    ['strat','Awaiting decision',pend,'Recommendations to sign off','go','strategy'],
+    ['file','Preparing applications',cs.filter(c=>c.stage===4).length+Object.values(AREA_STAGE).reduce((n,a)=>n+Object.values(a).filter(x=>x===4).length,0)-cs.filter(c=>c.stage===4).length,'Forms being pre-filled','crmStage','all:4']
+  ];
+  const areaCard=a=>{
+    const st=cs.map(c=>AREA_STAGE[c.id]&&AREA_STAGE[c.id][a.id]).filter(x=>x!==undefined&&x!==null);
+    const n=st.length; const per=STAGES.map((_,i)=>st.filter(x=>x===i).length);
+    const top=per.map((k,i)=>[k,i]).filter(x=>x[0]).sort((x,y)=>y[0]-x[0]).slice(0,3);
+    return `<button class="acard" data-act="crmArea2" data-v="${a.id}">
+      <div class="row" style="gap:12px;flex-wrap:nowrap">${tile(a.id,'lg')}<div style="min-width:0"><b class="acard-n">${a.name}</b><span class="small">${{credit:'Home, practice and commercial loans',tax:'Medical accounting and tax',smsf:'Self managed super',insurance:'Life, TPD and income cover',legal:'Wills and asset protection'}[a.id]}</span></div></div>
+      <div class="acard-v"><b class="num">${n}</b><span class="small">client${n===1?'':'s'}</span></div>
+      <div class="sbar" aria-label="${a.name} clients by stage">${per.map((k,i)=>k?`<span style="flex:${k};background:${shade(i)}" title="${STAGES[i]}: ${k}"></span>`:'').join('')||'<span style="flex:1;background:var(--sunk)"></span>'}</div>
+      <div class="acard-l">${top.map(([k,i])=>`<span><i style="background:${shade(i)}"></i>${STAGE_SHORT[i]} <b class="num">${k}</b></span>`).join('')||'<span class="faint">No clients yet</span>'}</div>
+    </button>`;
+  };
+  const maxStage=Math.max(1,...STAGES.map((_,i)=>stageCount(i)));
+  const pipe=STAGES.map((s,i)=>{const list=cs.filter(c=>c.stage===i);return `<button class="prow" data-act="crmStage" data-v="stage:${i}">
+      <span class="prow-s"><span class="sn" style="background:${shade(i)};color:${i>2?'var(--on-brand)':'var(--brand-ink)'}">${i+1}</span><span><b>${s}</b>${i===5?'<span class="small">MVP ends here</span>':''}</span></span>
+      <span class="avs">${list.slice(0,4).map(c=>`<span class="av sm" title="${esc(c.name)}">${initials(CRM[c.id].lead)}</span>`).join('')}${list.length>4?`<span class="av sm more">+${list.length-4}</span>`:''}</span>
+      <span class="ptrack"><span style="width:${list.length/maxStage*100}%;background:${shade(i)}"></span></span>
+      <b class="num pcount">${list.length}</b><span class="chev">${I('chevR')}</span></button>`;}).join('');
+  return `<div class="stack" style="gap:24px">
+  <div class="head"><div class="stack" style="gap:4px"><span class="eyebrow">Thursday 8 October</span><h1 style="font-size:26px">Good morning, James</h1><span class="sub">${today?`You have ${today} discovery session today and `:''}${pend} recommendations waiting on clients.</span></div>
     <div class="row"><button class="btn" data-act="nav" data-v="sessions">${I('clock')}Sessions</button><button class="btn primary" data-act="newClient">${I('plus')}New client</button></div></div>
-  <div class="panel stats">
-    <button class="stat" data-act="nav" data-v="clients"><b>${active}</b><small>Active clients</small></button>
-    <button class="stat" data-act="crmStage" data-v="all:0"><b>${disc}</b><small>In discovery or strategy</small></button>
-    <button class="stat" data-act="go" data-v="strategy"><b>${pend}</b><small>Awaiting client decision</small></button>
-    <button class="stat" data-act="crmStage" data-v="all:4"><b>${prep}</b><small>Applications in preparation</small></button>
-  </div>
+  <div class="kpis">${kpis.map(([ic,l,v,sub,act,val])=>`<button class="kpi2" data-act="${act}" data-v="${val}"><span class="kpi2-i">${I(ic)}</span><span class="kpi2-l">${l}</span><b class="num">${v}</b><span class="small">${sub}</span></button>`).join('')}</div>
+  <section class="stack" style="gap:12px"><div class="row"><h2 style="font-size:16px">Advice areas</h2><span class="grow"></span><span class="legend">${STAGE_SHORT.map((s,i)=>`<span><i style="background:${shade(i)}"></i>${s}</span>`).join('')}</span></div>
+    <div class="acards">${AREAS.map(areaCard).join('')}</div></section>
   <div class="dash">
-    <div class="stack" style="gap:16px;min-width:0">
-      <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:12px"><div class="h" style="padding:0"><h2>Clients by area and stage</h2><span class="small">Select a number to see those clients</span></div></div>${matrix}</section>
-      <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:12px"><div class="h" style="padding:0"><h2>Pipeline</h2><span class="small">Each client’s overall stage</span></div></div>${kan}</section>
-    </div>
-    <aside class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:6px"><div class="h" style="padding:0"><h2>Upcoming sessions</h2><button class="btn ghost sm" data-act="nav" data-v="sessions">All</button></div></div>
-      ${up.map(sessRow).join('')}</aside>
+    <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:8px"><div class="h" style="padding:0"><h2>Pipeline</h2><span class="small">Where every client is in the lifecycle</span></div></div>${pipe}</section>
+    <aside class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>Upcoming sessions</h2><button class="btn ghost sm" data-act="nav" data-v="sessions">View all</button></div></div>
+      ${SESSIONS.slice(0,4).map(sessRow).join('')}</aside>
   </div></div>`;
 };
 function sessRow(s){
-  return `<div class="sess"><div class="sess-d"><b>${s.day==='Today'||s.day==='Tomorrow'?s.day:s.date.split(' ')[0]}</b><span>${s.t}</span></div>
-    <div style="min-width:0"><div class="row" style="gap:6px"><span class="tag">${I(SESS_IC[s.type])} ${s.type}</span></div><div style="font-weight:600;margin-top:4px">${esc(s.who)}</div><div class="small">${esc(s.note)}</div>
-    <div class="row" style="gap:6px;margin-top:8px">${s.type==='Discovery'&&!s.done?`<button class="btn sm primary" data-act="startDisc" data-v="${s.id}">Start fact find</button>`:''}${s.done?'<span class="pill p-ok">Fact find done</span>':''}${s.cid?`<button class="btn sm" data-act="openCust" data-v="${s.cid}">Open client</button>`:''}</div></div></div>`;
+  const when = s.day==='Today'||s.day==='Tomorrow' ? s.day : s.date.split(' ').slice(0,1)[0]+' '+s.date.split(' ')[1];
+  return `<div class="srow"><div class="sdate ${s.day==='Today'?'today':''}"><b>${when}</b><span>${s.t}</span></div>
+    <div style="min-width:0;flex:1"><div style="font-weight:600;font-size:13.5px">${esc(s.who)}</div><div class="small">${s.type} · ${esc(s.where)}</div></div>
+    ${s.type==='Discovery'&&!s.done?`<button class="btn sm primary" data-act="startDisc" data-v="${s.id}">Start</button>`:s.done?'<span class="pill p-ok">Done</span>':s.cid?`<button class="btn sm" data-act="openCust" data-v="${s.cid}">Open</button>`:''}</div>`;
 }
 VIEWS.sessions = () => {
   const days=[...new Set(SESSIONS.map(s=>s.date))];
@@ -1736,7 +1801,8 @@ const A = {
     CRM[id]={lead:`${t} ${first} ${last}`.trim(),prof:f['p1.spec']||f['p1.prof']||'—',email:f['p1.email']||'—',phone:f['p1.mobile']||'—',sub:(f['p1.addr']||'').split(',').slice(-1)[0].trim()||'—',since:ex?(CRM[id]?.since==='Prospect'?'Oct 2026':CRM[id]?.since||'Oct 2026'):'Oct 2026',last:'Just now · Fact find completed',next:'Write strategy notes'};
     AREA_STAGE[id]=Object.fromEntries(areas.map(a=>[a,0])); S.nc=null; S.view='client'; S.cust=id; S.tab='profile'; window.scrollTo(0,0);
     return toast(`${first} ${last} created · Vault folder Othello / Clients / ${first} ${last} set up`);},
-  crmStage:v=>{const [a,i]=v.split(':'); S.crmStage={a,i:+i}; S.crmArea='all'; S.view='clients'; window.scrollTo(0,0);}, crmClear:()=>{S.crmStage=null;},
+  crmStage:v=>{const [a,i]=v.split(':'); S.crmStage={a,i:+i}; S.crmArea='all'; S.view='clients'; window.scrollTo(0,0);}, crmClear:()=>{S.crmStage=null;}, crmArea2:v=>{S.crmStage=null; S.crmArea=v; S.view='clients'; window.scrollTo(0,0);},
+  signout:v=>{S.authed=false; S.menu=''; S.mnav=false; S.drawer=S.modal=null; S.loginErr=''; S.loginRole=S.role; if(v!=='switch') return toast('Signed out');},
   toast:v=>toast(v)
 };
 document.addEventListener('click',e=>{
@@ -1747,7 +1813,14 @@ document.addEventListener('click',e=>{
   const fn=A[t.dataset.act]; if(!fn) return; e.preventDefault();
   const r=fn(t.dataset.v,t); if(r!==true && r!==undefined) return; if(r===true) return; render();
 });
+document.addEventListener('submit',e=>{
+  if (e.target.id!=='login') return; e.preventDefault();
+  const role=$('#lg-role').value, pw=$('#lg-pw').value;
+  if (pw==='Jupiter'){ S.authed=true; S.loginErr=''; S.role=role; S.view=role==='admin'?'config':role==='adviser'?'dash':'clients'; S.cfg.screen='home'; window.scrollTo(0,0); render(); }
+  else { S.loginRole=role; S.loginErr=pw?'That password isn’t right. Try again.':'Enter the password.'; render(); }
+});
 document.addEventListener('change',e=>{
+  if (e.target.dataset && e.target.dataset.loginRole!==undefined){ S.loginRole=e.target.value; const d=$('#lg-desc'); if(d) d.textContent=VIEWS_LOGIN.find(v=>v[0]===e.target.value)[2]; return; }
   const k=e.target.dataset?.up; if(!k||!e.target.files.length) return;
   const file=e.target.files[0], [cl,doc,en]=k.split('|'), area=clById(cl).area;
   S.files.unshift({id:'u'+Date.now(),folder:area==='tax'?'A&T':areaName(area),name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',mod:'Today',type:(META[doc]?.t||['unknown'])[0],ent:en,conf:100,assign:k,isNew:true,x:{'Uploaded':'Client portal','Saved to':'Vault (Google Drive)'}});
