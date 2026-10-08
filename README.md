@@ -5,7 +5,7 @@ Single-file HTML prototype of Othello Vault for Medcentric. Open `index.html` in
 **Sign in:** choose a view from the *View as* dropdown and use the demo password `Jupiter`. (The password is checked client-side — it keeps casual visitors out, it is not real security.)
 
 ## Views (switch any time from the *Viewing as* chip or the user menu)
-- **Client Administrator** — advice areas (Credit, Tax, SMSF, Insurance, Legal), product providers, product list, requirement rules, application form templates, document library, Vault settings
+- **Client Administrator** — advice areas (Credit, Tax, SMSF, Insurance, Legal), product providers, product list, requirement rules, application form templates, field mapping (link each PDF form field to the customer record, a Vault document, the strategy pack, a calculation or manual entry, then publish), document library, Vault settings
 - **Advisor** — dashboard (advice areas, pipeline, upcoming sessions), customer CRM, sessions, multi-step fact find / discovery form
 - **Team Member** (specialist team) — customers, customer profile and customer view, checklists, issues, pre-filled application forms, strategy, Vault
 

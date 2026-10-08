@@ -504,6 +504,52 @@ details.more[open] summary{border-bottom:1px solid var(--line)}
 .cell2{width:30px;height:30px;border-radius:8px;border:0;background:var(--brand-soft);color:var(--brand);display:inline-grid;place-items:center;vertical-align:middle}
 .cell2 .ico{width:15px;height:15px;stroke-width:2.4}
 .cell2:hover{background:var(--brand);color:var(--on-brand)}
+/* field mapping */
+.mapper{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:20px;align-items:start}
+.mwrap{padding:18px;min-width:0}
+.paper.mpaper{width:auto;max-width:820px;min-width:640px;padding:28px 30px 32px}
+.mgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mf{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:2px;min-height:44px;padding:5px 30px 6px 7px;border-right:1px solid var(--paper-line);border-bottom:1px solid var(--paper-line);position:relative;cursor:pointer;background:var(--paper-fill);min-width:0;transition:box-shadow .12s}
+.mf.w2{grid-column:span 2}
+.mf:hover{box-shadow:inset 0 0 0 1.5px var(--brand-line)}
+.mf:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.mf-l{font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:#6A6A74;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mf-v{font-size:11px;color:#16161C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mf-c{position:absolute;top:4px;right:4px;font-size:8.5px;font-weight:700;padding:0 4px;border-radius:3px;background:#0B0B10;color:#fff;letter-spacing:.02em}
+.mf.unmapped{background:var(--paper-flag);box-shadow:inset 0 0 0 1.5px #C9921B}
+.mf.unmapped .mf-v{color:#9A6A00;font-style:italic}
+.mf.unmapped .mf-c{background:#9A6A00}
+.mf.suggested{background:#E9E4FF;outline:1.5px dashed #7B69EE;outline-offset:-2px}
+.mf.suggested .mf-c{background:var(--brand)}
+.mf.sel{background:#fff;box-shadow:inset 0 0 0 2px var(--brand),0 0 0 3px rgba(91,69,224,.18);z-index:1}
+.mf.sel .mf-c{background:var(--brand)}
+.mtbl{border:1px solid var(--paper-line);border-bottom:0;display:flex;flex-direction:column}
+.mtbl-h{display:flex;gap:14px;padding:5px 8px;background:#F4F4F7;border-bottom:1px solid var(--paper-line);font-size:9px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;color:#44454D;flex-wrap:wrap}
+.mtbl .mf{border-right:0}
+.mside{position:sticky;top:calc(76px + env(safe-area-inset-top,0px));min-width:0}
+.medit{display:flex;flex-direction:column}
+.medit h2{overflow-wrap:anywhere}
+.mlist-b{max-height:min(46vh,440px);overflow:auto;border-top:1px solid var(--line)}
+.mlist-b .grp{padding:7px 14px;font-size:11.5px;border-top:0;position:sticky;top:0;z-index:1}
+.mrow{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}
+.mrow:hover{background:var(--hover)}
+.mrow.on{background:var(--brand-soft);box-shadow:inset 3px 0 0 var(--brand)}
+.mrow:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.mrow .small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mdot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--ok)}
+.mdot.unmapped{background:var(--warn)}
+.mdot.suggested{background:var(--brand)}
+.mprog{display:flex;align-items:center;gap:12px}
+.mprog .bar{flex:1;height:8px;border-radius:99px;background:var(--sunk);overflow:hidden;display:flex}
+.mprog .bar .v{background:var(--ok)}
+.mprog .bar .r{background:var(--brand);opacity:.55}
+.mlist .seg{flex-wrap:wrap}
+@media (max-width:1100px){.mapper{grid-template-columns:minmax(0,1fr)}.mside{position:static}.mwrap{overflow-x:auto}}
+@media (max-width:640px){.paper.mpaper{min-width:600px}}
+.srckey{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--muted)}
+.srckey span{display:inline-flex;align-items:center;gap:6px}
+.srckey b{font-size:10px;font-weight:700;padding:1px 5px;border-radius:4px;background:var(--fg);color:var(--bg)}
+.mlist .seg button{font-size:12.5px;padding-inline:9px}
 /* paper form */
 .paper-wrap{background:var(--sunk);border-radius:14px;padding:24px;overflow-x:auto}
 .paper{background:var(--paper);color:var(--paper-ink);width:800px;margin:0 auto;box-shadow:0 2px 14px rgba(0,0,0,.16);padding:36px 40px 40px;font-size:11.5px;position:relative;font-family:var(--font)}
@@ -1161,7 +1207,8 @@ function crumbs(){
     if (S.cfg.screen==='library') return `<button class="link" data-act="nav" data-v="config">Advice areas</button>${sep}<b>Document library</b>`;
     const a=AREA(S.cfg.area); let c=`<button class="link" data-act="nav" data-v="config">Advice areas</button>${sep}`;
     if (S.cfg.screen==='area') return c+`<b>${a.name}</b>`;
-    const fp=findProd(S.cfg.prod); return c+`<button class="link" data-act="nav" data-v="cfgArea:${a.id}">${a.name}</button>${sep}<b>${esc(fp.prov.name)} · ${esc(fp.prod.name)}</b>`;
+    const fp=findProd(S.cfg.prod); if (S.cfg.screen==='mapping') return c+`<button class="link" data-act="nav" data-v="cfgArea:${a.id}">${a.name}</button>${sep}<button class="link" data-act="cfgProd" data-v="${fp.prod.id}">${esc(fp.prov.name)} · ${esc(fp.prod.name)}</button>${sep}<b>Field mapping</b>`;
+    return c+`<button class="link" data-act="nav" data-v="cfgArea:${a.id}">${a.name}</button>${sep}<b>${esc(fp.prov.name)} · ${esc(fp.prod.name)}</b>`;
   }
   return '';
 }
@@ -1428,13 +1475,16 @@ function formFamily(area,prod){
   if (area.id==='insurance') return 'ins';
   return prod.id==='leg-epoa'?'epoa':prod.id==='leg-asset'?'asset':'will';
 }
-function tplPaper(fam,prov,prod){
-  const base=FORMS[fam]; let n=0;
-  const d={...base};
+function formDef(fam,prod){
+  const base=FORMS[fam]; const d={...base};
   if (fam==='ins') d.title={ip:'Income Protection Application',trauma:'Trauma Cover Application',tpd:'Life and TPD Insurance Application'}[prod.id.split('-').pop()]||'Life Insurance Application';
   if (fam==='com' && prod.id.endsWith('-cpl')) d.sections=base.sections.map((x,i)=>i===3?{h:'4. Property being purchased',f:[['Property address','CON',2],['Purchase price','CON'],['Settlement date','CON'],['Zoning and permitted use','VAL',2],['Tenancy (e.g. medical suites)','CON',2],['Gross rental income','CON'],['Owner-occupied by the practice','FF']]}:x);
   if (fam==='ins' && !prod.id.endsWith('-ip')) d.sections=base.sections.map(x=>x.h.startsWith('4.')?{...x,f:x.f.filter(f=>!/Income protection|Waiting|Benefit period|Agreed/.test(f[0]))}:x);
   if (fam==='ins' && prod.id.endsWith('-ip')) d.sections=base.sections.filter(x=>!x.h.startsWith('7.')).map(x=>x.h.startsWith('4.')?{...x,f:x.f.filter(f=>!/^Life cover|^TPD|^Trauma/.test(f[0]))}:x);
+  return d;
+}
+function tplPaper(fam,prov,prod){
+  let n=0; const d=formDef(fam,prod);
   const src=k=>`<span class="src" tabindex="0" data-tip="${SRC[k]||k}">${k}</span>`;
   const nm=k=>`<i style="color:#6A6A74;font-family:var(--font)">${esc((SRC[k]||k).split(' — ')[0])}</i>`;
   const sec=s=> s.f
@@ -1450,6 +1500,117 @@ function tplPaper(fam,prov,prod){
     ${body}
     <div class="p-sec"><div class="p-sec-h">Declaration</div><div class="p-decl">${d.decl}</div></div></div></div>`;
 }
+
+/* ============ FIELD MAPPING — map each PDF form field to Othello data (Client Administrator) ============ */
+FORMS.res = {kicker:'RESIDENTIAL LENDING',title:'Home Loan Application',who:'Lender',sections:[
+ {h:'1. Loan details',f:[['Application type','ST'],['Loan amount','ST'],['Product','ST',2],['Purpose','ST',2],['Repayment type','ST'],['Loan term','ST'],['Repayment frequency','FF'],['100% offset','ST'],['Broker','SYS',2]]},
+ {h:'2. Applicant 1 — primary',f:[['Title','FF'],['Given names','PP'],['Surname','PP'],['Other names','DL'],['Date of birth','PP'],['Marital status','FF'],['Residency','PP'],['Dependants','FF'],['Current address','FF',2],['Time at address','FF'],['Residential status','FF'],['Previous address','DL',2],['Mobile','FF'],['Email','FF'],['Licence no. / state','DL'],['Licence expiry','DL'],['Passport no.','PP'],['Passport expiry','PP']]},
+ {h:'3. Applicant 2 — secondary',f:[['Title','FF'],['Given names','PP'],['Surname','DL'],['Former name','PP'],['Date of birth','PP'],['Marital status','FF'],['Residency','PP'],['Relationship to Applicant 1','FF'],['Current address','DL',2],['Mobile','FF'],['Email','FF'],['Licence no. / state','DL'],['Passport no.','PP']]},
+ {h:'4. Employment & income',f:[['A1 employer','PS'],['A1 occupation','FF'],['A1 basis','PS'],['A1 start date','FF'],['A1 gross salary','PS'],['A1 rental income','AS'],['A1 other income','FF',2],['A2 employer','PS'],['A2 occupation','FF'],['A2 basis','PS'],['A2 start date','FF'],['A2 gross salary','PS',2]]},
+ {h:'5. Assets',t:{cols:['Asset','Owner','Value'],note:'One row per asset',src:'FF'}},
+ {h:'6. Liabilities',t:{cols:['Facility','Owner','Limit','Balance','Repayment','Refinance'],note:'One row per liability',src:'LS'}},
+ {h:'7. Security property',f:[['Address','TS',2],['Title reference','TS'],['Property type','FF'],['Registered proprietors','TS',2],['Estimated value','FF'],['LVR','CALC'],['Building insurer / policy','IC',2],['Sum insured','IC'],['Lender noted on policy','IC']]},
+ {h:'8. Living expenses',f:[['Declared expenses','BS'],['HEM benchmark','SYS'],['Used for servicing','CALC',2]]}],
+ decl:'Signatures are captured outside Othello.'};
+
+const SRC_TYPES = ['Customer record','Supporting document','Strategy pack','Calculated','Othello system','Manual entry'];
+const CUST_FIELDS = {
+ 'Primary applicant':['Title','First name','Last name','Other names','Date of birth','Email','Mobile','Residential address','At address since','Previous address','Marital status','Residency','Employment type','Employer','Occupation','Start date','Annual income','Private practice income','Specialty','AHPRA registration'],
+ 'Secondary applicant':['Title','First name','Last name','Other names','Date of birth','Email','Mobile','Residential address','Relationship to primary','Employment type','Employer','Occupation','Start date','Annual income'],
+ 'Dependants':['Number of dependants','First name','Date of birth','Age','Relationship to applicant','Lives with applicant'],
+ 'Assets':['All assets (one row each)','Type','Description','Owner','Value'],
+ 'Liabilities':['All liabilities (one row each)','Type','Lender','Owner','Balance','Limit','Repayment','Rate'],
+ 'Entities':['Name','Type','ABN / ACN','Applicant role'],
+ 'Product application':['Product','Provider','Amount','Term','Purpose','Repayment type','Quote rate','Cover amount']
+};
+const STRAT_FIELDS = ['Product','Provider','Amount','Term','Purpose','Repayment type','Interest type','Offset','Cover amount','Waiting period','Benefit period','Ownership'];
+const FORMATS = ['As captured','UPPERCASE','DD/MM/YYYY','MM/YYYY','$ currency','Percentage','Yes / No','Masked (last 3 digits)'];
+const DOC_SRCS = Object.keys(SRC).filter(k=>!['FF','ST','CALC','SYS','APL'].includes(k));
+function guessCust(label,sec){
+  const who = /Applicant 2|secondary|^A2 /i.test(sec+' '+label) ? 'Secondary applicant' : 'Primary applicant';
+  const L=label.toLowerCase(); const pick=f=>`${who} › ${f}`;
+  if (/^asset/.test(sec.replace(/^\d+\. /,'').toLowerCase())) return 'Assets › All assets (one row each)';
+  if (/dependant/.test(L)) return 'Dependants › Number of dependants';
+  if (/title/.test(L)) return pick('Title'); if (/given|first name/.test(L)) return pick('First name'); if (/surname|last name/.test(L)) return pick('Last name');
+  if (/birth/.test(L)) return pick('Date of birth'); if (/marital/.test(L)) return pick('Marital status'); if (/mobile|phone/.test(L)) return pick('Mobile'); if (/email/.test(L)) return pick('Email');
+  if (/previous/.test(L)) return pick('Previous address'); if (/time at/.test(L)) return pick('At address since'); if (/address/.test(L)) return pick('Residential address');
+  if (/relationship/.test(L)) return 'Secondary applicant › Relationship to primary'; if (/occupation/.test(L)) return pick('Occupation'); if (/start/.test(L)) return pick('Start date');
+  if (/employer|practice/.test(L)) return pick('Employer'); if (/other income/.test(L)) return pick('Private practice income'); if (/income|salary/.test(L)) return pick('Annual income');
+  if (/value/.test(L)) return 'Assets › Value'; if (/property type|residential status/.test(L)) return 'Assets › Type'; if (/frequency/.test(L)) return 'Product application › Repayment type';
+  if (/owner/.test(L)) return pick('First name'); if (/name/.test(L)) return pick('First name');
+  return pick('Occupation');
+}
+function defMapping(label,src,sec){
+  if (src==='FF') return {type:'Customer record',field:guessCust(label,sec),fmt:/birth|date/i.test(label)?'DD/MM/YYYY':/salary|income|value|amount|price/i.test(label)?'$ currency':'As captured'};
+  if (src==='ST') return {type:'Strategy pack',field:STRAT_FIELDS.find(f=>label.toLowerCase().includes(f.toLowerCase().split(' ')[0]))||'Product',fmt:/amount/i.test(label)?'$ currency':'As captured'};
+  if (src==='CALC') return {type:'Calculated',field:/lvr/i.test(label)?'Loan amount ÷ security value':'Higher of declared expenses and HEM',fmt:/lvr/i.test(label)?'Percentage':'$ currency'};
+  if (src==='SYS'||src==='APL') return {type:'Othello system',field:label,fmt:'As captured'};
+  return {type:'Supporting document',doc:src,dfield:label.replace(/^A[12] /,'').replace(/^./,c=>c.toUpperCase()),fallback:'Customer record',fmt:/name|surname/i.test(label)&&(src==='PP'||src==='DL')?'UPPERCASE':/expiry|birth|date/i.test(label)?'DD/MM/YYYY':'As captured'};
+}
+function mapState(prodId){
+  if (!S.map) S.map={};
+  if (S.map[prodId]) return S.map[prodId];
+  const {area,prod}=findProd(prodId); const fam=formFamily(area,prod); const d=formDef(fam,prod);
+  const fields=[]; d.sections.forEach((s,si)=>{
+    if (s.f) s.f.forEach(([l,src,w],fi)=>{ const key=`${si}.${fi}`; const unm=((si*7+fi*3)%10)===4; fields.push({key,sec:s.h,label:l,src,w,req:!/other|previous|former|frequency|offset/i.test(l),status:unm?'unmapped':'mapped',m:unm?{type:'',fmt:'As captured'}:defMapping(l,src,s.h)}); });
+    else if (s.t.rows) s.t.rows.forEach((r,ri)=>fields.push({key:`${si}.t${ri}`,sec:s.h,label:r[0],src:r[2],w:4,table:s.t,row:true,req:true,status:'mapped',m:defMapping(r[0],r[2],s.h)}));
+    else { const key=`${si}.t`; fields.push({key,sec:s.h,label:s.h.replace(/^\d+\. /,'')+' (table)',src:s.t.src,table:s.t,req:true,status:'mapped',m:{...defMapping(s.h.replace(/^\d+\. /,''),s.t.src,s.h),repeat:true}}); }
+  });
+  S.map[prodId]={fam,fields,sel:fields.find(f=>f.status==='unmapped')?.key||fields[0].key,filter:'all',q:''};
+  return S.map[prodId];
+}
+const mapLabel = m => !m||!m.type ? 'Not mapped' : m.type==='Supporting document' ? `${(SRC[m.doc]||m.doc).split(' — ')[0]} › ${m.dfield}` : m.type==='Manual entry' ? 'Entered at review' : m.type==='Calculated' ? `= ${m.field}` : m.field;
+const mapShort = m => !m||!m.type ? 'Not mapped' : m.type==='Customer record' ? String(m.field).replace(/^Primary applicant › /,'A1 · ').replace(/^Secondary applicant › /,'A2 · ') : m.type==='Supporting document' ? (m.dfield||'') : mapLabel(m);
+const mapCode = f => f.m.type==='Supporting document'?f.m.doc:f.m.type==='Customer record'?'FF':f.m.type==='Strategy pack'?'ST':f.m.type==='Calculated'?'CALC':f.m.type==='Othello system'?'SYS':f.m.type==='Manual entry'?'MAN':'?';
+
+VIEWS.mapping = () => {
+  const {area,prov,prod}=findProd(S.cfg.prod); const st=mapState(prod.id); const d=formDef(st.fam,prod);
+  const F=st.fields, sel=F.find(f=>f.key===st.sel)||F[0];
+  const n=F.length, mapped=F.filter(f=>f.status==='mapped').length, sugg=F.filter(f=>f.status==='suggested').length, unm=F.filter(f=>f.status==='unmapped').length;
+  const box = f => { const cls=f.key===sel.key?'sel':f.status; return f.table
+    ? `<button class="mf mf-t ${cls}" data-act="mapSel" data-v="${f.key}" title="${esc(f.label+' — '+mapLabel(f.m))}"><span class="mf-l">${esc(f.label)}</span><span class="mf-v">${esc(mapShort(f.m))}</span><span class="mf-c">${f.status==='mapped'?mapCode(f):f.status==='suggested'?'AI':'—'}</span></button>`
+    : `<button class="mf ${f.w===2?'w2':''} ${cls}" ${f.w===4?'style="grid-column:span 4"':''} data-act="mapSel" data-v="${f.key}" title="${esc(f.label+' — '+mapLabel(f.m))}"><span class="mf-l">${esc(f.label)}</span><span class="mf-v">${esc(mapShort(f.m))}</span><span class="mf-c">${f.status==='mapped'?mapCode(f):f.status==='suggested'?'AI':'—'}</span></button>`; };
+  const paper = `<div class="paper mpaper"><div class="p-head"><div><div style="font-size:10px;letter-spacing:.08em;color:#6A6A74;font-weight:600">${d.kicker} · FIELD MAP</div><h2>${d.title}</h2><div style="font-size:11px;color:#44454D">${esc(prod.name)}</div></div><div class="lender"><b style="font-size:13px;color:#0B0B10">${d.who}: ${esc(prov.name)}</b><br>${esc(prod.form)}<br>Version ${prod.ver}</div></div>
+    ${d.sections.map((s,si)=>`<div class="p-sec"><div class="p-sec-h">${s.h}</div>${s.f?`<div class="p-grid mgrid">${F.filter(f=>f.key.startsWith(si+'.')&&!f.table).map(box).join('')}</div>`:`<div class="mtbl">${s.t.rows?'':`<div class="mtbl-h">${s.t.cols.map(c=>`<span>${c}</span>`).join('')}</div>`}${F.filter(f=>f.key.startsWith(si+'.t')).map(box).join('')}</div>`}</div>`).join('')}
+    <div class="p-sec"><div class="p-sec-h">Declaration</div><div class="p-decl">${d.decl}</div></div></div>`;
+  const shown = F.filter(f=>(st.filter==='all'||f.status===st.filter)&&(!st.q||(f.label+' '+mapLabel(f.m)).toLowerCase().includes(st.q)));
+  const groups=[...new Set(shown.map(f=>f.sec))];
+  const m=sel.m||{};
+  const custOpts = Object.entries(CUST_FIELDS).map(([g,fs])=>`<optgroup label="${g}">${fs.map(x=>`<option ${m.field===g+' › '+x?'selected':''}>${g} › ${x}</option>`).join('')}</optgroup>`).join('');
+  const editor = `<div class="panel sec medit" style="gap:12px">
+    <div class="row" style="gap:8px"><span class="eyebrow">${esc(sel.sec.replace(/^\d+\. /,''))}</span><span class="grow"></span>${sel.status==='mapped'?'<span class="pill p-ok">Mapped</span>':sel.status==='suggested'?'<span class="pill p-acc">Suggested</span>':'<span class="pill p-warn">Needs mapping</span>'}</div>
+    <h2 style="font-size:17px">${esc(sel.label)}</h2>
+    <div class="field"><label for="mp-type">Value comes from</label><select class="in" id="mp-type" data-mp="type"><option value="" ${!m.type?'selected':''}>Choose a source…</option>${SRC_TYPES.map(t=>`<option ${m.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+    ${m.type==='Customer record'?`<div class="field"><label for="mp-field">Customer record field</label><select class="in" id="mp-field">${custOpts}</select></div>`:''}
+    ${m.type==='Supporting document'?`<div class="field"><label for="mp-doc">Supporting document</label><select class="in" id="mp-doc">${DOC_SRCS.map(k=>`<option value="${k}" ${m.doc===k?'selected':''}>${SRC[k]}</option>`).join('')}</select></div>
+      <div class="field"><label for="mp-dfield">Field read from the document</label><input class="in" id="mp-dfield" value="${esc(m.dfield||'')}"></div>
+      <div class="field"><label for="mp-fb">If the document isn’t matched yet</label><select class="in" id="mp-fb">${['Customer record','Leave blank — flag for review','Strategy pack'].map(x=>`<option ${m.fallback===x?'selected':''}>${x}</option>`).join('')}</select></div>`:''}
+    ${m.type==='Strategy pack'?`<div class="field"><label for="mp-field">Recommendation field</label><select class="in" id="mp-field">${STRAT_FIELDS.map(x=>`<option ${m.field===x?'selected':''}>${x}</option>`).join('')}</select></div>`:''}
+    ${m.type==='Calculated'?`<div class="field"><label for="mp-field">Formula</label><input class="in" id="mp-field" value="${esc(m.field||'')}"></div>`:''}
+    ${m.type==='Othello system'?`<div class="field"><label for="mp-field">System value</label><input class="in" id="mp-field" value="${esc(m.field||'')}"></div>`:''}
+    ${m.type==='Manual entry'?`<div class="msg info">${I('info')}<span>Left blank on the pre-filled form. The specialist team completes it when reviewing the application.</span></div>`:''}
+    ${m.type?`<div class="row" style="gap:12px;flex-wrap:nowrap"><div class="field" style="flex:1"><label for="mp-fmt">Format</label><select class="in" id="mp-fmt">${FORMATS.map(x=>`<option ${m.fmt===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <label class="row" style="gap:8px;margin-top:22px;white-space:nowrap"><input type="checkbox" id="mp-req" ${sel.req?'checked':''} style="accent-color:var(--brand)">Required</label></div>
+      ${sel.table&&!sel.row?`<div class="msg info">${I('info')}<span>Repeats one row per ${/asset/i.test(sel.label)?'asset':/liab|facil/i.test(sel.label)?'liability':'record'} from the customer record.</span></div>`:''}`:''}
+    <div class="row">${sel.status==='suggested'?`<button class="btn sm" data-act="mapReject" data-v="${sel.key}">Clear suggestion</button>`:''}<span class="grow"></span><button class="btn sm" data-act="mapNext">Next field ${I('chevR')}</button><button class="btn primary sm" data-act="mapSave" data-v="${sel.key}" ${m.type?'':'disabled'}>${I('check')}Save mapping</button></div>
+  </div>`;
+  const list = `<div class="panel mlist" style="overflow:hidden"><div class="sec" style="padding:12px 14px;gap:10px">
+      <label class="search" style="width:100%">${I('search')}<input placeholder="Search fields" aria-label="Search fields" data-mapq value="${esc(st.q)}"></label>
+      <span class="seg" style="align-self:flex-start">${[['all','All',n],['unmapped','To map',unm],['suggested','Suggested',sugg],['mapped','Mapped',mapped]].map(([k,l,c])=>`<button class="${st.filter===k?'on':''}" data-act="mapFilter" data-v="${k}">${l} ${c}</button>`).join('')}</span></div>
+    <div class="mlist-b">${groups.map(g=>`<div class="mgrp"><div class="grp">${esc(g)}</div>${shown.filter(f=>f.sec===g).map(f=>`<button class="mrow ${f.key===sel.key?'on':''}" data-act="mapSel" data-v="${f.key}" data-mq="${esc((f.label+' '+mapLabel(f.m)).toLowerCase())}"><span class="mdot ${f.status}"></span><span style="min-width:0;flex:1"><span style="display:block;font-weight:500">${esc(f.label)}</span><span class="small">${esc(mapLabel(f.m))}</span></span><span class="tag">${f.status==='mapped'?mapCode(f):f.status==='suggested'?'AI':'—'}</span></button>`).join('')}</div>`).join('')||'<div class="sec small">No fields match.</div>'}</div></div>`;
+  return `<div class="stack" style="gap:20px">
+    <div class="head"><div class="ph">${tile(area.id,'lg')}<div class="stack" style="gap:6px"><span class="eyebrow">${esc(prov.name)} · ${esc(prod.name)}</span><h1>Field mapping</h1>${st.pub?`<span class="pill p-ok" style="align-self:flex-start">Published · version ${st.pub}</span>`:''}
+      <div class="meta-row"><span class="row" style="gap:6px">${I('file')}${esc(prod.form)}</span><span><b>${n}</b> fields</span><span><b>${mapped}</b> mapped</span>${sugg?`<span><b>${sugg}</b> suggested</span>`:''}<span><b style="color:${unm?'var(--warn)':'var(--ok)'}">${unm}</b> need mapping</span></div></div></div>
+      <div class="row">${unm?`<button class="btn" data-act="mapAuto">${I('refresh')}Auto-map ${unm} field${unm>1?'s':''}</button>`:''}${sugg?`<button class="btn" data-act="mapAcceptAll">${I('check')}Accept ${sugg} suggestion${sugg>1?'s':''}</button>`:''}<button class="btn primary" data-act="mapPublish">${I('upload')}Publish mapping</button></div></div>
+    <div class="mprog"><div class="bar" role="progressbar" aria-valuenow="${Math.round(mapped/n*100)}" aria-valuemin="0" aria-valuemax="100" aria-label="Fields mapped"><span class="v" style="width:${mapped/n*100}%"></span><span class="r" style="width:${sugg/n*100}%"></span></div><span class="small num">${Math.round(mapped/n*100)}% mapped</span></div>
+    <div class="msg info">${I('info')}<span>Click any field on the form, then choose where Othello takes its value from. When a team member opens this product’s application form for a customer, every mapped field is filled in for them.</span></div>
+    <div class="mapper">
+      <div class="paper-wrap mwrap">${paper}</div>
+      <div class="stack mside" style="gap:14px">${editor}${list}</div>
+    </div>
+    <div class="srckey">${['FF','ST','CALC','SYS','MAN'].map(k=>`<span><b>${k}</b>${k==='MAN'?'Manual entry':(SRC[k]||'').split(' — ')[0]}</span>`).join('')}<span><b>PP</b>…<b>AH</b> Supporting document codes</span><span><b>AI</b>Suggested by auto-map</span></div>
+  </div>`;
+};
 
 function animateForm(){ const p=$('#paper'); if(!p) return; p.classList.add('fillanim'); const els=[...p.querySelectorAll('.v,.fv')]; let i=0;
   const step=()=>{for(let k=0;k<5&&i<els.length;k++,i++) els[i].classList.add('in'); if(i<els.length) setTimeout(step,24); else {p.classList.remove('fillanim'); els.forEach(e=>e.classList.remove('in'));}}; step(); }
@@ -1669,7 +1830,7 @@ VIEWS.newclient = () => {
 const AREA_DESC = {credit:'Residential lending, practice acquisitions and commercial property', tax:'Medical accounting, tax planning and lodgement', smsf:'Self managed super fund compliance, audit and establishment', insurance:'Life, TPD, trauma and income protection for medical careers', legal:'Wills and estates, entity structuring and asset protection'};
 const short = n => n.replace('MC Wealth – ','').replace('Harbour Legal Partners','Harbour Legal');
 const pinit = n => short(n).replace(/[^A-Za-z ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
-VIEWS.config = () => S.cfg.screen==='home'?cfgHome():S.cfg.screen==='library'?cfgLibrary():S.cfg.screen==='area'?cfgArea():cfgProduct();
+VIEWS.config = () => S.cfg.screen==='mapping'?VIEWS.mapping():S.cfg.screen==='home'?cfgHome():S.cfg.screen==='library'?cfgLibrary():S.cfg.screen==='area'?cfgArea():cfgProduct();
 function cfgHome(){
   const libN=Object.keys(LIB).length, all=AREAS.flatMap(a=>a.providers.flatMap(p=>p.products)), provN=AREAS.reduce((n,a)=>n+a.providers.length,0), dr=all.filter(p=>p.status==='Draft').length;
   const card=a=>{const prods=a.providers.flatMap(p=>p.products),d=prods.filter(p=>p.status==='Draft').length,live=prods.length-d;
@@ -1731,8 +1892,8 @@ function cfgProduct(){
   return `<div class="split"><div class="grow stack" style="gap:16px">
     <div class="head"><div class="ph">${tile(area.id,'lg')}<div class="stack" style="gap:6px"><div class="row" style="gap:10px"><h1>${esc(prod.name)}</h1>${prod.status==='Draft'?'<span class="pill p-warn">Draft</span>':''}</div>
       <div class="meta-row"><span>${esc(prov.name)}</span><span>${esc(prod.cat)}</span><span><b>${prod.docs.length}</b> documents</span></div></div></div></div>
-    <section class="panel sec"><div class="h"><h2>Application form</h2><span class="small">Version controlled · ${prod.fields} fields mapped</span></div>
-      <div class="file"><button class="pdf" style="border:0;cursor:pointer" data-act="tplView" data-v="${prod.id}" aria-label="Open template">PDF</button><div style="flex:1;min-width:160px"><button class="flink" style="font-size:14px;font-weight:600;color:var(--brand-ink)" data-act="tplView" data-v="${prod.id}">${esc(prod.form)}</button><div class="small">Current version ${prod.ver}</div></div><button class="btn sm" data-act="toast" data-v="New version uploaded. The previous one stays in history.">${I('upload')}New version</button></div></section>
+    <section class="panel sec"><div class="h"><h2>Application form</h2><span class="small">Version controlled · ${mapSummary(prod.id)}</span></div>
+      <div class="file"><button class="pdf" style="border:0;cursor:pointer" data-act="tplView" data-v="${prod.id}" aria-label="Open template">PDF</button><div style="flex:1;min-width:160px"><button class="flink" style="font-size:14px;font-weight:600;color:var(--brand-ink)" data-act="tplView" data-v="${prod.id}">${esc(prod.form)}</button><div class="small">Current version ${prod.ver}</div></div><button class="btn sm" data-act="toast" data-v="New version uploaded. The previous one stays in history.">${I('upload')}New version</button><button class="btn primary sm" data-act="openMapping" data-v="${prod.id}">Map fields</button></div></section>
     <section class="panel sec"><div class="h"><h2>Requirement rules</h2><button class="btn ghost sm" data-act="cfgAccAll">${S.cfg.open.length===tnames.length?'Collapse all':'Expand all'}</button></div>
       <div class="accs">${accs}</div></section></div>
     <aside class="panel prev"><span class="eyebrow">Checklist preview</span>${area.id==='credit'&&prod.cat!=='Commercial'?`<span class="seg">${[['PAYG','PAYG couple'],['SE','Self-employed couple']].map(([k,l])=>`<button class="${S.cfg.pv===k?'on':''}" data-act="cfgPv" data-v="${k}">${l}</button>`).join('')}</span><span class="small">Refinancing one property</span>`:`<span class="small">${area.id==='insurance'?'Two doctors, one with existing cover':'Sample household'}</span>`}
@@ -1828,8 +1989,8 @@ function fileDrawer(id){
 function tplModal(id){
   const {area,prov,prod}=findProd(id);
   const home = area.id==='credit' && prod.cat==='Residential';
-  return `<div class="row" style="gap:12px;align-items:center"><span class="pdf">PDF</span><div style="flex:1;min-width:0"><h2 style="font-size:17px;font-weight:600;overflow-wrap:anywhere">${esc(prod.form)}</h2><span class="small">${esc(prov.name)} · ${esc(prod.name)} · version ${prod.ver} · ${prod.fields} fields mapped</span></div><button class="x" aria-label="Close" data-act="close">×</button></div>
-   <div class="row"><span class="small">Each field shows where Othello takes its value from.</span><span class="grow"></span><button class="btn sm" data-act="toast" data-v="Template downloaded (prototype)">Download</button><button class="btn sm" data-act="toast" data-v="New version uploaded. The previous one stays in history.">${I('upload')}New version</button></div>
+  return `<div class="row" style="gap:12px;align-items:center"><span class="pdf">PDF</span><div style="flex:1;min-width:0"><h2 style="font-size:17px;font-weight:600;overflow-wrap:anywhere">${esc(prod.form)}</h2><span class="small">${esc(prov.name)} · ${esc(prod.name)} · version ${prod.ver} · ${mapSummary(prod.id)}</span></div><button class="x" aria-label="Close" data-act="close">×</button></div>
+   <div class="row"><span class="small">Each field shows where Othello takes its value from.</span><span class="grow"></span><button class="btn sm" data-act="toast" data-v="Template downloaded (prototype)">Download</button>${S.role==='admin'?`<button class="btn primary sm" data-act="openMapping" data-v="${prod.id}">Edit field mapping</button>`:''}<button class="btn sm" data-act="toast" data-v="New version uploaded. The previous one stays in history.">${I('upload')}New version</button></div>
    ${home ? formView(false,{prov,prod}) : tplPaper(formFamily(area,prod),prov,prod)}`;
 }
 function manualModal(id){
@@ -1875,7 +2036,26 @@ function addProductModal(){ const a=AREA(S.cfg.area);
    <div class="row" style="justify-content:flex-end"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doAddProduct">Add as draft</button></div>`; }
 
 /* ============ EVENTS ============ */
+function mapSummary(id){ const st=mapState(id); const n=st.fields.length, m=st.fields.filter(f=>f.status==='mapped').length; return m===n?`${n} fields mapped`:`${m} of ${n} fields mapped`; }
+function mapRender(scrollRow){ const lb=$('.mlist-b'), top=lb?lb.scrollTop:0; render(); const nb=$('.mlist-b'); if(!nb) return; nb.scrollTop=top;
+  const on=nb.querySelector('.mrow.on'); if(on){ const r=on.getBoundingClientRect(), b=nb.getBoundingClientRect(); if(r.top<b.top||r.bottom>b.bottom) nb.scrollTop+= r.top-b.top-b.height/3; }
+  if(scrollRow){ const bx=$('.mf.sel'); if(bx){ const r=bx.getBoundingClientRect(); if(r.top<80||r.bottom>innerHeight) window.scrollBy({top:r.top-innerHeight/3,behavior:'smooth'}); } } }
 const A = {
+  openMapping:v=>{const fp=findProd(v); S.view='config'; S.cfg.area=fp.area.id; S.cfg.prod=v; S.cfg.screen='mapping'; S.modal=null; S.wide=false; S.drawer=null; S.menu=''; window.scrollTo(0,0);},
+  mapSel:(v,t)=>{ mapState(S.cfg.prod).sel=v; mapRender(); if(t&&t.classList.contains('mf')&&innerWidth<=1100){ const ed=$('.medit'); if(ed) ed.scrollIntoView({behavior:'smooth',block:'start'}); } return true; },
+  mapNext:()=>{ const st=mapState(S.cfg.prod), F=st.fields, i=F.findIndex(f=>f.key===st.sel); const nx=[...F.slice(i+1),...F.slice(0,i)].find(f=>f.status!=='mapped')||F[(i+1)%F.length]; st.sel=nx.key; mapRender(true); return true; },
+  mapSave:v=>{ const st=mapState(S.cfg.prod), f=st.fields.find(x=>x.key===v), val=id=>{const e=$(id); return e?e.value:undefined;};
+    const m={type:val('#mp-type'),fmt:val('#mp-fmt')||'As captured'}; if(f.m.repeat) m.repeat=true;
+    if(m.type==='Supporting document'){ m.doc=val('#mp-doc'); m.dfield=val('#mp-dfield'); m.fallback=val('#mp-fb'); } else if(m.type!=='Manual entry') m.field=val('#mp-field');
+    if(!m.type) return; f.m=m; const r=$('#mp-req'); if(r) f.req=r.checked; f.status='mapped'; st.pub=st.pub&&null;
+    const left=st.fields.filter(x=>x.status!=='mapped').length; toast(left?`Saved · ${left} field${left>1?'s':''} left`:'All fields mapped — ready to publish'); if(left) return A.mapNext(); },
+  mapFilter:v=>{ mapState(S.cfg.prod).filter=v; },
+  mapAuto:()=>{ const st=mapState(S.cfg.prod); let k=0; st.fields.forEach(f=>{ if(f.status==='unmapped'){ f.m=defMapping(f.label,f.src,f.sec); f.status='suggested'; k++; } }); st.filter='suggested'; st.sel=st.fields.find(f=>f.status==='suggested')?.key||st.sel; toast(`${k} suggestion${k>1?'s':''} ready to review`); },
+  mapAcceptAll:()=>{ const st=mapState(S.cfg.prod); let k=0; st.fields.forEach(f=>{ if(f.status==='suggested'){ f.status='mapped'; k++; } }); if(st.filter==='suggested') st.filter='all'; toast(`${k} suggestion${k>1?'s':''} accepted`); },
+  mapReject:v=>{ const f=mapState(S.cfg.prod).fields.find(x=>x.key===v); f.m={type:'',fmt:'As captured'}; f.status='unmapped'; },
+  mapPublish:()=>{ const st=mapState(S.cfg.prod), {prod}=findProd(S.cfg.prod); const left=st.fields.filter(f=>f.status!=='mapped').length;
+    if(left){ st.filter=st.fields.some(f=>f.status==='unmapped')?'unmapped':'suggested'; toast(`Map or accept the last ${left} field${left>1?'s':''} before publishing`); return; }
+    st.pub=(Math.floor(parseFloat(prod.ver)||1)+1)+'.0'; prod.fields=st.fields.length; toast(`Mapping published as version ${st.pub}. New application forms use it straight away.`); },
   role:v=>{S.role=v; S.menu=''; S.drawer=S.modal=null; S.view=v==='admin'?'config':v==='adviser'?'dash':'clients'; S.cfg.screen='home'; window.scrollTo(0,0);},
   nav:v=>{S.menu=''; S.mnav=false; const [k,x]=String(v).split(':'); if(k==='cfgArea') return A.cfgArea(x); if(k==='cfgLib'){S.view='config'; S.cfg.screen='library'; window.scrollTo(0,0); return;} S.view=k; if(k==='config') S.cfg.screen='home'; window.scrollTo(0,0);},
   menu:v=>{S.menu = S.menu===v ? '' : v;}, mnav:()=>{S.mnav=!S.mnav;}, soon:()=>toast('Coming in a later release'), crmArea:v=>{S.crmArea=v;}, cfgLibF:v=>{S.cfg.libf=v;},
@@ -1956,12 +2136,19 @@ document.addEventListener('submit',e=>{
 });
 document.addEventListener('change',e=>{
   if (e.target.dataset && e.target.dataset.loginRole!==undefined){ S.loginRole=e.target.value; const d=$('#lg-desc'); if(d) d.textContent=VIEWS_LOGIN.find(v=>v[0]===e.target.value)[2]; return; }
+  if (e.target.dataset && e.target.dataset.mp==='type'){ const st=mapState(S.cfg.prod), f=st.fields.find(x=>x.key===st.sel), t=e.target.value; const m={...f.m,type:t};
+    if(t==='Customer record'&&!/›/.test(m.field||'')) m.field=guessCust(f.label,f.sec);
+    if(t==='Supporting document'){ m.doc=m.doc||(DOC_SRCS.includes(f.src)?f.src:'PP'); m.dfield=m.dfield||f.label.replace(/^A[12] /,'').replace(/^./,c=>c.toUpperCase()); m.fallback=m.fallback||'Customer record'; }
+    if(t==='Strategy pack'&&!STRAT_FIELDS.includes(m.field)) m.field=STRAT_FIELDS[0];
+    if(t==='Calculated'&&!(f.m.type==='Calculated')) m.field='';
+    if(t==='Othello system'&&!(f.m.type==='Othello system')) m.field=f.label;
+    f.m=m; mapRender(); return; }
   const k=e.target.dataset?.up; if(!k||!e.target.files.length) return;
   const file=e.target.files[0], [cl,doc,en]=k.split('|'), area=clById(cl).area;
   S.files.unshift({id:'u'+Date.now(),folder:area==='tax'?'A&T':areaName(area),name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',mod:'Today',type:(META[doc]?.t||['unknown'])[0],ent:en,conf:100,assign:k,isNew:true,x:{'Uploaded':'Customer portal','Saved to':'Vault (Google Drive)'}});
   S.items[k]={status:'received'}; delete S.requested[k]; toast('Uploaded — your adviser will check it');
 });
-document.addEventListener('input',e=>{ const ds=e.target.dataset||{}; if(ds.nc&&S.nc){S.nc.f[ds.nc]=e.target.value; return;} if(ds.ncl&&S.nc){const [l,i,k]=ds.ncl.split('.'); S.nc[l][+i][k]=e.target.value; return;} if(ds.crm===undefined) return; const q=e.target.value.toLowerCase(); document.querySelectorAll('[data-q]').forEach(r=>{r.hidden=!r.dataset.q.includes(q);}); });
+document.addEventListener('input',e=>{ const ds=e.target.dataset||{}; if(ds.mapq!==undefined){ const q=e.target.value.toLowerCase(); mapState(S.cfg.prod).q=q; document.querySelectorAll('.mrow').forEach(r=>{r.hidden=!r.dataset.mq.includes(q);}); document.querySelectorAll('.mgrp').forEach(g=>{g.hidden=!g.querySelector('.mrow:not([hidden])');}); return; } if(ds.nc&&S.nc){S.nc.f[ds.nc]=e.target.value; return;} if(ds.ncl&&S.nc){const [l,i,k]=ds.ncl.split('.'); S.nc[l][+i][k]=e.target.value; return;} if(ds.crm===undefined) return; const q=e.target.value.toLowerCase(); document.querySelectorAll('[data-q]').forEach(r=>{r.hidden=!r.dataset.q.includes(q);}); });
 document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); const i=document.querySelector('[data-search]'); if(i) i.focus(); }
   if(e.key==='Escape'&&S.menu){S.menu=''; render(); return;} if(e.key==='Escape'&&(S.drawer||S.modal)){S.drawer=S.modal=null; S.wide=false; render();} });
 try{ const r=sessionStorage.getItem('ov_auth'); if(r&&VIEWS_LOGIN.some(v=>v[0]===r)){ S.authed=true; S.role=r; S.view=r==='admin'?'config':r==='adviser'?'dash':'clients'; } }catch(e){}
