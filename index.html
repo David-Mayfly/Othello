@@ -689,10 +689,10 @@ const META = {
 const SKIP_REASON = {
  selfemp:'Only for self-employed applicants — both are salaried', post:'Collected after the application is submitted',
  io:'Only for interest-only loans', never:'Only when a rate lock is requested',
- newparty:'Only for new tax clients', business:'Only for business returns', gst:'Only for GST-registered entities', trust:'Only for trust returns', partnership:'Only for partnership returns',
+ newparty:'Only for new tax customers', business:'Only for business returns', gst:'Only for GST-registered entities', trust:'Only for trust returns', partnership:'Only for partnership returns',
  entityret:'Only for entity returns', est:'Only when establishing a new fund', admission:'Only when admitting new members or trustees', pension:'Only for funds paying a pension',
- smsfnew:'Only for new fund clients', referral:'Only if underwriting asks for it', highsum:'Only for very high sums insured', bexp:'Only for business expenses cover',
- superOwn:'Only when cover is held inside super', ipParty:'Only for income protection', lifeParty:'Only for life and TPD cover', existing:'Only when the client already has cover'
+ smsfnew:'Only for new fund customers', referral:'Only if underwriting asks for it', highsum:'Only for very high sums insured', bexp:'Only for business expenses cover',
+ superOwn:'Only when cover is held inside super', ipParty:'Only for income protection', lifeParty:'Only for life and TPD cover', existing:'Only when the customer already has cover'
 };
 
 /* ============ CONFIGURATION: AREAS → PROVIDERS → PRODUCTS ============ */
@@ -769,7 +769,7 @@ const RULES = [
  ['R-05','One-off supporting documents','Team members can add once-off documents to a single customer checklist. They are not saved back to the product template.'],
  ['R-06','Verification & max age','A document is only “fulfilled” once verified against its verification rule and max-age / expiry limit.'],
  ['R-07','Identity consistency','Names, dates of birth and addresses extracted from IDs and statements are compared to the fact find. Differences raise a discrepancy that must be consolidated before the application form is finalised.'],
- ['R-08','Lifecycle boundary (MVP)','Workflow ends at “Application submitted”. Post-submission items (valuations, loan offers, executed documents) are excluded.']
+ ['R-08','Lifecycle boundary (MVP)','Workflow ends at “Lodged” — the specialist team lodges outside Othello. Post-lodgement items (valuations, loan offers, executed documents) are excluded.']
 ];
 
 /* ============ CUSTOMER RECORD (fact find) ============ */
@@ -817,7 +817,7 @@ const ENT_LABEL = id => {
 const CHECKLISTS = [
  {id:'credit',area:'credit',prov:'anz',prod:'anz-var',title:'ANZ · Home Loan – Variable (P&I)',purpose:'Refinance CBA home loan + $28k renovation · $640,000',rec:'R1',stage:4,owner:'Sarah Chen',
    ctx:{parties:['p1','p2'],payg:['p1','p2'],securities:['a1'],repayment:'PI'}},
- {id:'tax',area:'tax',prov:'mct',prod:'tax-ind',title:'Individual Tax Returns FY2026',purpose:'Leonard & Emily · new client (transferring from previous accountant)',rec:'R4',stage:3,owner:'Daniel Ruiz',
+ {id:'tax',area:'tax',prov:'mct',prod:'tax-ind',title:'Individual Tax Returns FY2026',purpose:'Leonard & Emily · new customer (transferring from previous accountant)',rec:'R4',stage:3,owner:'Daniel Ruiz',
    ctx:{parties:['p1','p2'],payg:['p1','p2'],newClient:true,rentals:['a2'],rentalLoans:['l2']}},
  {id:'smsf',area:'smsf',prov:'mcs',prod:'smsf-ann',title:'SMSF Annual Compliance & Audit FY2026',purpose:'Hart Family Super Fund · accumulation phase',rec:'R5',stage:3,owner:'Priya Nair',
    ctx:{parties:['p1','p2'],members:['p1','p2'],fund:'s1',trades:true}},
@@ -826,7 +826,7 @@ const CHECKLISTS = [
  {id:'legal',area:'legal',prov:'hlp',prod:'leg-ttw',title:'Harbour Legal · Testamentary Trust Wills',purpose:'Mirror wills for Leonard & Emily with testamentary trusts for Oliver and Ruby',rec:'R6',stage:3,owner:'Emma Walsh',
    ctx:{parties:['p1','p2'],properties:['a1','a2']}}
 ];
-const STAGES = ['Discovery','Strategy','Strategy sign-off','Document collection','Application preparation','Application submitted'];
+const STAGES = ['Discovery','Strategy','Acceptance','Document collection','Ready','Lodged'];
 
 /* ============ GOOGLE DRIVE ============ */
 const DRIVE_FOLDERS = ['Onboarding','SMSF','Old Accountant Files','Insurance','Legal','ID','Credit','A&T'];
@@ -1076,13 +1076,13 @@ function navItems(){
   ];
   if (S.role==='adviser') return [
     {l:'Workspace'}, {k:'dash',ic:'home',t:'Dashboard',on:S.view==='dash'},
-    {k:'clients',ic:'users',t:'Clients',cnt:S.customers.length,on:S.view==='clients'||S.view==='client'},
+    {k:'clients',ic:'users',t:'Customers',cnt:S.customers.length,on:S.view==='clients'||S.view==='client'},
     {k:'sessions',ic:'clock',t:'Sessions',cnt:SESSIONS.filter(x=>x.day==='Today').length||null,on:S.view==='sessions'},
-    {k:'newclient',ic:'plus',t:'New client',on:S.view==='newclient'},
+    {k:'newclient',ic:'plus',t:'New customer',on:S.view==='newclient'},
     {l:'Documents'}, {k:'vault',ic:'vault',t:'Vault',on:S.view==='vault'}
   ];
   return [
-    {l:'Workspace'}, {k:'clients',ic:'users',t:'Clients',cnt:S.customers.length,on:S.view==='clients'||S.view==='client'},
+    {l:'Workspace'}, {k:'clients',ic:'users',t:'Customers',cnt:S.customers.length,on:S.view==='clients'||S.view==='client'},
     {k:'vault',ic:'vault',t:'Vault',cnt:vaultN||null,on:S.view==='vault'}, {k:'audit',ic:'history',t:'Audit log',dis:true}
   ];
 }
@@ -1111,7 +1111,7 @@ function userMenu(){
 }
 function notifMenu(){
   const list = S.role==='admin'
-    ? [['sliders','Draft changes to Insurance','Submit them for compliance approval','2h'],['vault','Drive sync healthy','112 client folders scanned','4:58 pm'],['users','Tom Bennett joined','Insurance team member','Yesterday']]
+    ? [['sliders','Draft changes to Insurance','Submit them for compliance approval','2h'],['vault','Drive sync healthy','112 customer folders scanned','4:58 pm'],['users','Tom Bennett joined','Insurance team member','Yesterday']]
     : [['upload','Emily uploaded 2 payslips','ANZ · Home Loan – Variable','10m'],['alert','4 details to consolidate','Hart household','1h'],['vault','3 documents need matching','Old Accountant Files','2h']];
   return `<div class="menu down notif" role="menu" data-stop><div class="row" style="padding:6px 10px 8px"><b>Notifications</b><span class="grow"></span><button class="btn ghost sm" data-act="menu" data-v="">Mark all read</button></div>
     ${list.map(([ic,t,s,w])=>`<div class="n"><span class="n-ic">${I(ic)}</span><div style="min-width:0"><div style="font-weight:500;font-size:13.5px">${t}</div><div class="small">${s} · ${w}</div></div></div>`).join('')}</div>`;
@@ -1119,12 +1119,12 @@ function notifMenu(){
 function topbar(){
   return `<header class="tb"><button class="ibtn mobile-only" aria-label="Menu" data-act="mnav">${I('menu')}</button>
     <div class="crumbs">${crumbs()}</div><span class="grow"></span>
-    <label class="search hide-sm">${I('search')}<input placeholder="${S.role==='admin'?'Search products, providers, documents':'Search clients, documents'}" aria-label="Search" data-search><span class="kbd">⌘K</span></label>
+    <label class="search hide-sm">${I('search')}<input placeholder="${S.role==='admin'?'Search products, providers, documents':'Search customers, documents'}" aria-label="Search" data-search><span class="kbd">⌘K</span></label>
     <div class="pop-wrap hide-sm"><button class="rolechip" data-act="menu" data-v="role" aria-haspopup="menu" aria-expanded="${S.menu==='role'}" title="Switch view">Viewing as ${ME[S.role].r.split(' · ')[0]}${I('chevD')}</button>${S.menu==='role'?`<div class="menu down" role="menu" data-stop style="width:320px"><div class="menu-l">Switch view</div>${VIEWS_LOGIN.map(([k,l,d])=>`<button class="menu-i" role="menuitemradio" aria-checked="${S.role===k}" data-act="switchRole" data-v="${k}" style="align-items:flex-start">${I(k==='adviser'?'strat':k==='team'?'users':'sliders')}<span><span style="display:block">${l}</span><span class="small">${d}</span></span>${S.role===k?`<span class="tick">${I('check')}</span>`:''}</button>`).join('')}</div>`:''}</div>
     <div class="pop-wrap"><button class="ibtn" aria-label="Notifications" data-act="menu" data-v="notif">${I('bell')}<span class="dot"></span></button>${S.menu==='notif'?notifMenu():''}</div>
     <button class="ibtn hide-sm" aria-label="Help" data-act="toast" data-v="Help centre (prototype)">${I('help')}</button></header>`;
 }
-const VIEWS_LOGIN = [['admin','Client Administrator','Advice areas, products, document rules and Vault settings'],['adviser','Advisor','Dashboard, clients, sessions and new client fact finds'],['team','Team Member','Client records, checklists, issues, application forms and the Vault']];
+const VIEWS_LOGIN = [['admin','Client Administrator','Advice areas, products, document rules and Vault settings'],['adviser','Advisor','Dashboard, customers, sessions and new customer fact finds'],['team','Team Member','Customer records, checklists, issues, application forms and the Vault']];
 function loginScreen(){
   const pick=S.loginRole||'admin';
   return `<div class="login"><form class="login-card panel" id="login" autocomplete="off" novalidate>
@@ -1135,7 +1135,7 @@ function loginScreen(){
     <div class="field"><label for="lg-pw">Password</label><input class="in" id="lg-pw" type="password" autocomplete="current-password" placeholder="Enter password" ${S.loginErr?'aria-invalid="true" style="border-color:var(--bad)"':''}>
       ${S.loginErr?`<span class="small" role="alert" style="color:var(--bad)">${esc(S.loginErr)}</span>`:''}</div>
     <button class="btn primary" type="submit" style="height:42px;justify-content:center;width:100%">Sign in</button>
-    <span class="small faint" style="text-align:center">Prototype · all client data is fictional</span>
+    <span class="small faint" style="text-align:center">Prototype · all customer data is fictional</span>
   </form></div>`;
 }
 function render(){
@@ -1150,11 +1150,11 @@ function render(){
 }
 function crumbs(){
   const sep = I('chevR');
-  if (S.view==='client'){ const c=S.customers.find(x=>x.id===S.cust); return `<button class="link" data-act="nav" data-v="clients">Clients</button>${sep}<b>${esc(c.name)}</b>`; }
-  if (S.view==='clients') return `<b>Clients</b>`;
+  if (S.view==='client'){ const c=S.customers.find(x=>x.id===S.cust); return `<button class="link" data-act="nav" data-v="clients">Customers</button>${sep}<b>${esc(c.name)}</b>`; }
+  if (S.view==='clients') return `<b>Customers</b>`;
   if (S.view==='dash') return `<b>Dashboard</b>`;
   if (S.view==='sessions') return `<b>Sessions</b>`;
-  if (S.view==='newclient') return `<button class="link" data-act="nav" data-v="clients">Clients</button>${sep}<b>New client</b>`;
+  if (S.view==='newclient') return `<button class="link" data-act="nav" data-v="clients">Customers</button>${sep}<b>New customer</b>`;
   if (S.view==='vault') return S.role==='admin'?`<span>Workspace</span>${sep}<b>Vault settings</b>`:`<b>Vault</b>${sep}<span>Google Drive · Othello / Clients</span>`;
   if (S.view==='config'){
     if (S.cfg.screen==='home') return `<b>Advice areas</b>`;
@@ -1172,10 +1172,10 @@ const TABS = {};
 /* ============ CLIENTS — the CRM (Medcentric has no other CRM) ============ */
 const CRM = {
  kas:{lead:'Dr Leonard Hart',prof:'Anaesthetist · Paediatric registrar',email:'leo.hart@mail.example',phone:'0491 570 156',sub:'Doncaster VIC',since:'Sep 2026',last:'Today · Emily’s payslips scanned',next:'Consolidate 4 identity details'},
- whi:{lead:'Dr Jordan Lee',prof:'General Practitioner',email:'j.lee@mail.example',phone:'0491 570 110',sub:'Hawthorn VIC',since:'Jul 2026',last:'2 days ago · Strategy signed off',next:'Collect 6 credit documents'},
+ whi:{lead:'Dr Jordan Lee',prof:'General Practitioner',email:'j.lee@mail.example',phone:'0491 570 110',sub:'Hawthorn VIC',since:'Jul 2026',last:'Yesterday · Every requirement met',next:'Lodge ANZ application'},
  oco:{lead:'Dr Chris Walker',prof:'Orthopaedic surgeon',email:'chris.walker@mail.example',phone:'0491 570 313',sub:'Kew VIC',since:'Sep 2026',last:'Last week · Discovery meeting',next:'Link a Vault folder'},
  hua:{lead:'Dr Mei Tan',prof:'Dentists · practice owners',email:'mei@riversidedental.example',phone:'0491 570 737',sub:'Box Hill VIC',since:'Mar 2025',last:'Yesterday · BAS uploaded',next:'Verify 3 tax documents'},
- sha:{lead:'Dr Priya Shah',prof:'Cardiologist',email:'priya.shah@mail.example',phone:'(03) 5550 1234',sub:'Camberwell VIC',since:'Jun 2026',last:'Monday · ANZ application submitted',next:'Lender assessing (outside MVP)'},
+ sha:{lead:'Dr Priya Shah',prof:'Cardiologist',email:'priya.shah@mail.example',phone:'(03) 5550 1234',sub:'Camberwell VIC',since:'Jun 2026',last:'Monday · ANZ application lodged',next:'Lender assessing (outside Othello)'},
  moo:{lead:'Dr Hannah Moore',prof:'GP · practice owner',email:'hannah.moore@mail.example',phone:'0491 570 006',sub:'Ivanhoe VIC',since:'Oct 2026',last:'Yesterday · Discovery booked',next:'Discovery Fri 10:30 am'},
  car:{lead:'Dr Ben Carter',prof:'Emergency registrar',email:'ben.carter@mail.example',phone:'0491 570 159',sub:'Footscray VIC',since:'Prospect',last:'Today · Questionnaire returned',next:'Discovery today 2:00 pm'},
  ngu:{lead:'Dr Taylor Brooks',prof:'Dentist',email:'taylor.brooks@mail.example',phone:'0491 570 158',sub:'Richmond VIC',since:'Oct 2026',last:'3 days ago · Fact find started',next:'Finish discovery'}
@@ -1186,12 +1186,12 @@ VIEWS.clients = () => {
   const af=S.crmArea||'all';
   const cs=S.crmStage; const rows=S.customers.filter(c=>(af==='all'||c.areas.includes(af))&&(!cs||(cs.a==='stage'?c.stage===cs.i:cs.a==='all'?(cs.i===0?c.stage<=1:c.stage===cs.i):AREA_STAGE[c.id]&&AREA_STAGE[c.id][cs.a]===cs.i)));
   return `<div class="stack">
-  ${pageHead(S.role==='team'?'Sarah Chen · Credit team':'Medcentric', 'Clients', 'Every client — contact details, household, advice areas and where they’re up to.', `<button class="btn" data-act="toast" data-v="Export client list (CSV)">${I('upload')}Export</button><button class="btn primary" data-act="newClient">${I('plus')}New client</button>`)}
-  ${kpiRow([['check','Documents to verify',tv,'Received, waiting on a check','go','verify'],['alert','Details to consolidate',iss,'Names, dates or addresses differ','go','issues'],['vault','Vault items to match',vx,'Unmatched files and folders','go','vault'],['strat','Awaiting client decision',pend,'Recommendations to sign off','go','strategy']])}
-  <div class="row"><label class="search" style="width:300px">${I('search')}<input placeholder="Search by name, profession or suburb" aria-label="Search clients" data-crm></label>
+  ${pageHead(S.role==='team'?'Sarah Chen · Credit team':'Medcentric', 'Customers', 'Every customer — contact details, household, advice areas and where they’re up to.', `<button class="btn" data-act="toast" data-v="Export customer list (CSV)">${I('upload')}Export</button><button class="btn primary" data-act="newClient">${I('plus')}New customer</button>`)}
+  ${kpiRow([['check','Documents to verify',tv,'Received, waiting on a check','go','verify'],['alert','Details to consolidate',iss,'Names, dates or addresses differ','go','issues'],['vault','Vault items to match',vx,'Unmatched files and folders','go','vault'],['strat','Awaiting customer decision',pend,'Recommendations to sign off','go','strategy']])}
+  <div class="row"><label class="search" style="width:300px">${I('search')}<input placeholder="Search by name, profession or suburb" aria-label="Search customers" data-crm></label>
     <span class="seg">${[['all','All']].concat(AREAS.map(a=>[a.id,a.name])).map(([k,l])=>`<button class="${af===k?'on':''}" data-act="crmArea" data-v="${k}">${l}</button>`).join('')}</span>${cs?`<button class="chip" data-act="crmClear" style="border:0;background:var(--brand-soft);color:var(--brand-ink)">${cs.a==='all'||cs.a==='stage'?'':areaName(cs.a)+' · '}${cs.a==='all'&&cs.i===0?'Discovery or strategy':STAGES[cs.i]} ${I('x')}</button>`:''}</div>
   <div class="panel" style="overflow:hidden"><div class="tablewrap">
-    <div class="th g-crm"><div>Client</div><div>Contact</div><div>Areas</div><div>Stage</div><div>Next action</div><div></div></div>
+    <div class="th g-crm"><div>Customer</div><div>Contact</div><div>Areas</div><div>Stage</div><div>Next action</div><div></div></div>
     ${rows.map(c=>{const x=CRM[c.id];return `<button class="tr g-crm" data-act="openCust" data-v="${c.id}" data-q="${esc((c.name+' '+x.prof+' '+x.sub).toLowerCase())}">
       <span class="row" style="gap:12px;flex-wrap:nowrap;min-width:0"><span class="av" style="background:var(--sunk);color:var(--fg)">${initials(x.lead)}</span><span style="min-width:0"><span style="font-weight:600;display:block">${esc(c.name.replace(/ \(.*\)/,''))}</span><span class="small">${esc(x.prof)} · ${x.sub}</span></span></span>
       <span class="small" style="min-width:0"><span style="display:block;overflow:hidden;text-overflow:ellipsis">${x.email}</span>${x.phone}</span>
@@ -1204,19 +1204,19 @@ VIEWS.clients = () => {
 
 VIEWS.client = () => {
   const c=S.customers.find(x=>x.id===S.cust), x=CRM[c.id], full=c.id==='kas';
-  const tabs = full ? [['profile','Profile'],['clientview','Client view'],['checklists','Checklists'],['issues','Issues',openDisc().length],['application','Application'],['strategy','Strategy']] : [['profile','Profile']];
+  const tabs = full ? [['profile','Profile'],['clientview','Customer view'],['checklists','Checklists'],['issues','Issues',openDisc().length],['application','Application'],['strategy','Strategy']] : [['profile','Profile']];
   if (!full) S.tab='profile';
   return `<div class="stack">
     <div class="head"><div class="ph"><span class="av" style="width:48px;height:48px;font-size:16px">${initials(x.lead)}</span><div class="stack" style="gap:6px"><h1>${esc(c.name.replace(/ \(.*\)/,''))}</h1>
       <div class="meta-row"><span class="row" style="gap:6px">${I('steth')}${esc(x.prof)}</span><span class="row" style="gap:6px">${I('pin')}${x.sub}</span><span class="row" style="gap:6px">${I('user')}Advisor ${c.adv}</span><span class="row" style="gap:6px">${c.areas.map(a=>tile(a,'sm')).join('')}</span></div></div></div>
-      <div class="row"><button class="btn" data-act="toast" data-v="Note added to the client timeline">${I('note')}Add note</button><button class="btn" data-act="openVault" data-v="${c.id}">${I('vault')}Open in Vault</button></div></div>
+      <div class="row"><button class="btn" data-act="toast" data-v="Note added to the customer timeline">${I('note')}Add note</button><button class="btn" data-act="openVault" data-v="${c.id}">${I('vault')}Open in Vault</button></div></div>
     <div class="panel sec">${life(c.stage)}</div>
     <div class="tabs">${tabs.map(([k,l,n])=>`<button class="${S.tab===k?'on':''}" data-act="tab" data-v="${k}">${l}${n?`<span class="n">${n}</span>`:''}</button>`).join('')}</div>
     ${TABS[S.tab]()}</div>`;
 };
 TABS.profile = () => {
   const c=S.customers.find(x=>x.id===S.cust), x=CRM[c.id], full=c.id==='kas';
-  const facts = [['Lead contact',x.lead],['Email',x.email],['Mobile',x.phone],['Client since',x.since],['Advisor',c.adv],['Vault folder',c.drive||'Not linked']];
+  const facts = [['Lead contact',x.lead],['Email',x.email],['Mobile',x.phone],['Customer since',x.since],['Advisor',c.adv],['Vault folder',c.drive||'Not linked']];
   const team = c.areas.map(a=>`<div class="row" style="gap:10px">${tile(a,'sm')}<span style="flex:1">${areaName(a)}</span><span class="small">${AREA(a).team}</span></div>`).join('');
   const activity = full ? [['upload','Payslips scanned for Emily','Vault · Credit','Today 9:12'],['check','Passport verified — Leonard','ANZ checklist','Yesterday'],['strat','Strategy signed off','James Okafor','22 Sep'],['note','Discovery meeting','Fact find captured','09 Sep']]
     : [['note',x.last.split(' · ')[1],'',x.last.split(' · ')[0]]];
@@ -1261,9 +1261,9 @@ TABS.checklists = () => {
     <div class="stack" style="gap:16px;min-width:0">
       <div class="head"><div class="stack" style="gap:4px"><span class="eyebrow row" style="gap:8px">${tile(cl.area,'sm')}${areaName(cl.area)} · ${cl.owner}</span><h2 style="font-size:20px;font-weight:600">${esc(cl.title)}</h2><span class="small">${esc(cl.purpose)}</span></div>
         <button class="btn" data-act="addOneOff">+ One-off document</button></div>
-      <div class="row" style="gap:16px"><span class="seg">${[['all','All',c.total],['missing','Outstanding',c.missing],['received','To verify',c.received],['rejected','Rejected',c.rejected],['verified','Verified',c.verified]].map(([k,l,n])=>`<button class="${f===k?'on':''}" data-act="clFilter" data-v="${k}">${l} ${n}</button>`).join('')}</span><span class="grow"></span><span class="small num">Client has supplied ${c.custDone} of ${c.cust}</span></div>
+      <div class="row" style="gap:16px"><span class="seg">${[['all','All',c.total],['missing','Outstanding',c.missing],['received','To verify',c.received],['rejected','Rejected',c.rejected],['verified','Verified',c.verified]].map(([k,l,n])=>`<button class="${f===k?'on':''}" data-act="clFilter" data-v="${k}">${l} ${n}</button>`).join('')}</span><span class="grow"></span><span class="small num">Customer has supplied ${c.custDone} of ${c.cust}</span></div>
       <div class="panel" style="overflow:hidden">${Object.entries(groups).map(([g,its])=>`<div class="grp">${esc(g)}</div>${its.map(itemRow).join('')}`).join('')||'<div class="sec small">Nothing here.</div>'}</div>
-      <details class="panel more"><summary>${skipped.length} template documents not required for this client — show why</summary>${skipped.map(s=>`<div class="skip"><span class="mono faint">${s.doc}</span><span>${esc(s.n)}<div class="small">${esc(s.why)}</div></span></div>`).join('')}</details>
+      <details class="panel more"><summary>${skipped.length} template documents not required for this customer — show why</summary>${skipped.map(s=>`<div class="skip"><span class="mono faint">${s.doc}</span><span>${esc(s.n)}<div class="small">${esc(s.why)}</div></span></div>`).join('')}</details>
     </div></div>`;
 };
 function itemRow(it){
@@ -1276,7 +1276,7 @@ function itemRow(it){
   const areas=[...new Set(sib.map(o=>areaName(clById(o.cl).area)))];
   return `<div class="it">${stDot(s)}
     <div style="min-width:0"><div class="nm">${esc(it.n)}</div>
-      <div class="meta">${person(it.ent)}<span>${it.by==='Customer'?'From client':it.by==='System'?'System':'Advisor'}</span>${it.oneoff?`<span class="pill p-acc" style="padding:2px 8px">One-off · ${esc(it.addedBy)}</span>`:''}${fs.map(f=>`<button class="flink" data-act="file" data-v="${f.id}">${esc(f.name)}</button>`).join('')}</div>
+      <div class="meta">${person(it.ent)}<span>${it.by==='Customer'?'From customer':it.by==='System'?'System':'Advisor'}</span>${it.oneoff?`<span class="pill p-acc" style="padding:2px 8px">One-off · ${esc(it.addedBy)}</span>`:''}${fs.map(f=>`<button class="flink" data-act="file" data-v="${f.id}">${esc(f.name)}</button>`).join('')}</div>
       ${s==='rejected'&&st?.note?`<div class="hint" style="color:var(--bad)">${I('x')}<span>${esc(st.note)}</span></div>`:''}
       ${areas.length?`<div class="hint">${I('info')}<span>Also needed for ${areas.join(', ')} — each checklist needs its own upload.</span></div>`:''}
     </div><div class="acts">${act}</div></div>`;
@@ -1290,7 +1290,7 @@ TABS.issues = () => `<div class="stack" style="gap:16px">
     ${d.status==='open'?`<div class="iss-b">
       <div class="cmp">${d.vals.map(x=>`<div class="${x.diff?'diff':''}"><span>${x.src}</span><b style="font-weight:500">${esc(x.v)}</b></div>`).join('')}</div>
       <div class="stack" style="gap:8px">${d.opts.map(o=>`<label class="opt"><input type="radio" name="opt-${d.id}" value="${o.id}" ${o.rec?'checked':''}><span>${esc(o.l)}${o.warn?`<br><span class="small" style="color:var(--bad)">${o.warn}</span>`:''}</span></label>`).join('')}
-        <div class="row" style="margin-top:4px"><button class="btn primary sm" data-act="resolve" data-v="${d.id}">Apply</button><button class="btn sm" data-act="flagCust" data-v="${d.id}">${d.flag?'Shown to client ✓':'Ask client'}</button></div></div>
+        <div class="row" style="margin-top:4px"><button class="btn primary sm" data-act="resolve" data-v="${d.id}">Apply</button><button class="btn sm" data-act="flagCust" data-v="${d.id}">${d.flag?'Shown to customer ✓':'Ask customer'}</button></div></div>
     </div>`:`<div style="padding:0 20px 18px" class="small">${esc(d.opts.find(o=>o.id===(d.chosen||'a')).l)}</div>`}
   </div>`).join('')}</div>`;
 
@@ -1458,9 +1458,9 @@ function animateForm(){ const p=$('#paper'); if(!p) return; p.classList.add('fil
 TABS.strategy = () => strategyView(false);
 function strategyView(customer){
   const rec = r => `<div class="rec ${r.status==='Declined'?'dec':''}">${tile(r.area,'sm')}<div class="stack" style="gap:3px;min-width:0"><span class="small" style="font-weight:600">${areaName(r.area)} · ${esc(r.prov)}</span><b style="font-weight:600">${esc(r.prod)}</b><span class="small">${esc(r.detail)}</span>${r.why?`<span class="small faint">Reason: ${esc(r.why)}</span>`:''}</div>
-    <div class="row" style="justify-content:flex-end">${r.status==='Accepted'?'<span class="pill p-ok">Accepted</span>':r.status==='Declined'?'<span class="pill p-mut">Declined</span>':customer?`<button class="btn sm" data-act="declineRec" data-v="${r.id}">Decline</button><button class="btn sm primary" data-act="acceptRec" data-v="${r.id}">Accept</button>`:'<span class="pill p-warn">Awaiting client</span>'}</div></div>`;
+    <div class="row" style="justify-content:flex-end">${r.status==='Accepted'?'<span class="pill p-ok" title="Authority to Proceed signed outside Othello">Accepted · ATP signed</span>':r.status==='Declined'?'<span class="pill p-mut">Declined</span>':customer?`<button class="btn sm" data-act="declineRec" data-v="${r.id}">Decline</button><button class="btn sm primary" data-act="acceptRec" data-v="${r.id}">Accept</button>`:'<span class="pill p-warn">Awaiting customer</span>'}</div></div>`;
   return `<div class="split">
-    <div class="grow panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>${customer?'Client decisions':'Recommendations'}</h2><span class="small">${S.recs.filter(r=>r.status==='Accepted').length} accepted · ${S.recs.filter(r=>r.status==='Pending').length} pending</span></div></div>${S.recs.map(rec).join('')}</div>
+    <div class="grow panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>${customer?'Customer decisions':'Recommendations'}</h2><span class="small">${S.recs.filter(r=>r.status==='Accepted').length} accepted · ${S.recs.filter(r=>r.status==='Pending').length} pending</span></div></div>${S.recs.map(rec).join('')}</div>
     <aside class="panel sec" style="gap:12px"><span class="eyebrow">Strategy notes</span><div class="note-t" style="font-size:13.5px">
       <p>Lower the home loan cost and use an offset; fund a $28k renovation; keep the Box Hill investment; bring SMSF compliance up to date; put income protection and own-occupation TPD in place that suit an anaesthetist’s procedural career; protect Oliver and Ruby with testamentary trust wills.</p>
       <p>CBA 6.54% vs ANZ 5.99% at 44% LVR — about $3,900 a year saved. Westpac interest-only period ends March 2027.</p></div>
@@ -1470,15 +1470,15 @@ function strategyView(customer){
 /* ============ VAULT — one component for storage, scanning and matching ============ */
 VIEWS.vault = () => {
   if (S.role==='admin') return vaultSettings();
-  if (!S.drive) return `<div class="stack"><div class="head"><div class="stack" style="gap:6px"><h1>Vault</h1><span class="sub">Every client document, read straight from your firm’s Google Drive.</span></div></div>
-    <div class="panel sec" style="align-items:center;text-align:center;padding:56px 20px;gap:12px">${driveLogo()}<b style="font-size:18px">Connect Google Drive</b><span class="sub" style="max-width:46ch">Choose the root folder that holds one folder per client. Othello reads and organises documents there — nothing is copied out of Drive.</span>${S.role==='admin'?'<button class="btn primary" data-act="connect">Connect Google Drive</button>':'<span class="small">Ask your client admin to connect Google Drive.</span>'}</div></div>`;
+  if (!S.drive) return `<div class="stack"><div class="head"><div class="stack" style="gap:6px"><h1>Vault</h1><span class="sub">Every customer document, read straight from your firm’s Google Drive.</span></div></div>
+    <div class="panel sec" style="align-items:center;text-align:center;padding:56px 20px;gap:12px">${driveLogo()}<b style="font-size:18px">Connect Google Drive</b><span class="sub" style="max-width:46ch">Choose the root folder that holds one folder per customer. Othello reads and organises documents there — nothing is copied out of Drive.</span>${S.role==='admin'?'<button class="btn primary" data-act="connect">Connect Google Drive</button>':'<span class="small">Ask your client admin to connect Google Drive.</span>'}</div></div>`;
   const c=S.customers.find(x=>x.id===S.vc);
   return `<div class="stack">
-    ${pageHead('Google Drive · Othello / Clients','Vault',`Every client document, read from your firm’s Google Drive · synced ${S.rescanned?'just now':'4:58 pm'}`,`<button class="btn primary" data-act="scan">${I('refresh')}Scan now</button>`)}
-    ${kpiRow([['folder','Folders linked',S.customers.filter(x=>x.match!=='none'&&(x.match==='exact'||x.confirmed)).length+' of '+S.customers.length,'Matched to client records'],['file','Documents scanned',S.files.length+212,'Classified and stored'],['link','Need matching',unmatched().length,'Low confidence or unknown','vfilter','attn'],['alert','No folder found',noFolder().length,'Clients without a Drive folder']])}
-    ${S.scanning?`<div class="panel sec" style="gap:10px"><b>Scanning ${esc(c.drive||'')}…</b><div class="scanbar"><span style="width:${S.scanPct}%"></span></div><span class="small">${S.scanPct<40?'Listing folders':S.scanPct<80?'Reading and classifying documents':'Matching to client records and checklists'}</span></div>`:''}
+    ${pageHead('Google Drive · Othello / Clients','Vault',`Every customer document, read from your firm’s Google Drive · synced ${S.rescanned?'just now':'4:58 pm'}`,`<button class="btn primary" data-act="scan">${I('refresh')}Scan now</button>`)}
+    ${kpiRow([['folder','Folders linked',S.customers.filter(x=>x.match!=='none'&&(x.match==='exact'||x.confirmed)).length+' of '+S.customers.length,'Matched to customer records'],['file','Documents scanned',S.files.length+212,'Classified and stored'],['link','Need matching',unmatched().length,'Low confidence or unknown','vfilter','attn'],['alert','No folder found',noFolder().length,'Customers without a Drive folder']])}
+    ${S.scanning?`<div class="panel sec" style="gap:10px"><b>Scanning ${esc(c.drive||'')}…</b><div class="scanbar"><span style="width:${S.scanPct}%"></span></div><span class="small">${S.scanPct<40?'Listing folders':S.scanPct<80?'Reading and classifying documents':'Matching to customer records and checklists'}</span></div>`:''}
     <div class="vault">
-      <div class="panel"><div class="sec" style="padding:16px 18px 6px"><span class="eyebrow">Clients</span></div><div class="vlist">
+      <div class="panel"><div class="sec" style="padding:16px 18px 6px"><span class="eyebrow">Customers</span></div><div class="vlist">
         ${S.customers.map(x=>{const n=x.id==='kas'?unmatched().length:0;return `<button class="${x.id===S.vc?'on':''}" data-act="vc" data-v="${x.id}"><span class="fold ${x.match==='none'?'miss':''}"></span><span style="font-weight:500">${esc(x.name.split(' (')[0])}</span>
           <small class="${x.match==='none'?'bad':x.match==='fuzzy'&&!x.confirmed?'warn':''}">${x.match==='none'?'No folder found':x.match==='fuzzy'&&!x.confirmed?`Suggested folder · ${x.score}%`:n?`${n} to match`:esc(x.drive)}</small></button>`}).join('')}
       </div></div>
@@ -1486,11 +1486,11 @@ VIEWS.vault = () => {
     </div></div>`;
 };
 function vaultClient(c){
-  if (c.match==='none') return `<div class="panel sec" style="align-items:center;text-align:center;padding:48px 20px;gap:12px"><span class="fold miss" style="width:28px;height:22px"></span><b style="font-size:17px">No Google Drive folder found for ${esc(c.name)}</b><span class="sub" style="max-width:48ch">No folder under Othello / Clients matches the names in this client’s fact find. Link an existing folder or create one from the standard structure.</span><div class="row"><button class="btn primary" data-act="folderMatch" data-v="${c.id}">Match manually</button><button class="btn" data-act="folderCreate" data-v="${c.id}">Create folder</button></div></div>`;
-  if (c.match==='fuzzy' && !c.confirmed) return `<div class="msg warn">${I('alert')}<div style="flex:1"><b>Is “${esc(c.drive)}” this client’s folder?</b> Matched on name similarity (${c.score}%).</div><button class="btn sm" data-act="folderMatch" data-v="${c.id}">Choose another</button><button class="btn sm primary" data-act="folderConfirm" data-v="${c.id}">Confirm</button></div>`+vaultOther(c);
+  if (c.match==='none') return `<div class="panel sec" style="align-items:center;text-align:center;padding:48px 20px;gap:12px"><span class="fold miss" style="width:28px;height:22px"></span><b style="font-size:17px">No Google Drive folder found for ${esc(c.name)}</b><span class="sub" style="max-width:48ch">No folder under Othello / Clients matches the names in this customer’s fact find. Link an existing folder or create one from the standard structure.</span><div class="row"><button class="btn primary" data-act="folderMatch" data-v="${c.id}">Match manually</button><button class="btn" data-act="folderCreate" data-v="${c.id}">Create folder</button></div></div>`;
+  if (c.match==='fuzzy' && !c.confirmed) return `<div class="msg warn">${I('alert')}<div style="flex:1"><b>Is “${esc(c.drive)}” this customer’s folder?</b> Matched on name similarity (${c.score}%).</div><button class="btn sm" data-act="folderMatch" data-v="${c.id}">Choose another</button><button class="btn sm primary" data-act="folderConfirm" data-v="${c.id}">Confirm</button></div>`+vaultOther(c);
   if (c.id!=='kas') return vaultOther(c);
   const um=unmatched().length;
-  const crumb=`<div class="gd-crumb"><button data-act="vpath" data-v="">Othello</button><span class="s">›</span><button data-act="vpath" data-v="">Clients</button><span class="s">›</span>${S.vpath?`<button data-act="vpath" data-v="">${esc(c.drive)}</button><span class="s">›</span><b style="font-weight:500;padding:2px 6px">${S.vpath}</b>`:`<b style="font-weight:500;padding:2px 6px">${esc(c.drive)}</b>`}</div>`;
+  const crumb=`<div class="gd-crumb"><button data-act="vpath" data-v="">Othello</button><span class="s">›</span><button data-act="vpath" data-v="">Customers</button><span class="s">›</span>${S.vpath?`<button data-act="vpath" data-v="">${esc(c.drive)}</button><span class="s">›</span><b style="font-weight:500;padding:2px 6px">${S.vpath}</b>`:`<b style="font-weight:500;padding:2px 6px">${esc(c.drive)}</b>`}</div>`;
   const toolbar=`<div class="row"><span class="seg"><button class="${S.vmode==='folders'?'on':''}" data-act="vmode" data-v="folders">Folders</button><button class="${S.vmode==='scanned'?'on':''}" data-act="vmode" data-v="scanned">Scanned documents</button></span><span class="grow"></span><span class="small">Matched to <button class="flink" data-act="openCust" data-v="kas">Hart household</button> on fact find names</span></div>`;
   const alert = um?`<div class="msg info">${I('link')}<div style="flex:1"><b>${um} documents need matching.</b> They couldn’t be classified with confidence.</div><button class="btn sm" data-act="vfilter" data-v="attn">Show them</button></div>`:'';
   return `${toolbar}${alert}${S.vmode==='folders'?`<div class="panel" style="overflow:hidden"><div class="sec" style="gap:12px">${crumb}<div class="gd-chips"><span class="gem">✦ Ask Gemini</span><span>Type ▾</span><span>People ▾</span><span>Modified ▾</span><span>Source ▾</span></div></div>${dirTable()}</div>`:scannedTable()}`;
@@ -1501,7 +1501,7 @@ function dirTable(){
   if (!S.vpath) return `<div class="tablewrap">${head}${DRIVE_FOLDERS.map(f=>{const n=S.files.filter(x=>x.folder===f).length,a=S.files.filter(x=>x.folder===f&&(x.unmatched||x.review)).length;
     return `<button class="tr g-gd" data-act="vpath" data-v="${f}"><span class="nm-cell"><span class="fold"></span><span>${f}</span></span><span class="small">18 Sept</span><span class="small">—</span><span class="small">${n} files${a?` · <b style="color:var(--warn)">${a} to match</b>`:''}</span></button>`}).join('')}</div>`;
   return `<div class="tablewrap">${head}${S.files.filter(x=>x.folder===S.vpath).map(f=>{const ext=f.name.split('.').pop().toLowerCase();
-    return `<button class="tr g-gd" data-act="file" data-v="${f.id}"><span class="nm-cell"><span class="fic ${ext==='docx'?'doc':ext==='pdf'?'':'img'}">${ext==='pdf'?'PDF':ext==='docx'?'W':'IMG'}</span><span>${esc(f.name)}</span></span><span class="small">${f.mod}</span><span class="small">${f.size}</span><span>${f.unmatched||f.review?'<span class="pill p-warn">Needs matching</span>':f.assign?`<span class="pill p-ok">${areaName(clById(f.assign.split('|')[0]).area)}</span>`:f.record?'<span class="pill p-acc">Client record</span>':'<span class="pill p-mut">On file</span>'}</span></button>`}).join('')}</div>`;
+    return `<button class="tr g-gd" data-act="file" data-v="${f.id}"><span class="nm-cell"><span class="fic ${ext==='docx'?'doc':ext==='pdf'?'':'img'}">${ext==='pdf'?'PDF':ext==='docx'?'W':'IMG'}</span><span>${esc(f.name)}</span></span><span class="small">${f.mod}</span><span class="small">${f.size}</span><span>${f.unmatched||f.review?'<span class="pill p-warn">Needs matching</span>':f.assign?`<span class="pill p-ok">${areaName(clById(f.assign.split('|')[0]).area)}</span>`:f.record?'<span class="pill p-acc">Customer record</span>':'<span class="pill p-mut">On file</span>'}</span></button>`}).join('')}</div>`;
 }
 function scannedTable(){
   const fl=S.vfilter; const fs=S.files.filter(f=>fl==='all'||(fl==='attn'?(f.unmatched||f.review):fl==='matched'?!!f.assign:(!f.assign&&!f.unmatched&&!f.review)));
@@ -1510,26 +1510,26 @@ function scannedTable(){
   ${fs.map(f=>{const k=f.assign?f.assign.split('|'):null; return `<div class="tr g-sc" ${f.isNew?'style="background:var(--ok-soft)"':''}><span style="min-width:0"><button class="flink" style="font-size:13.5px" data-act="file" data-v="${f.id}">${esc(f.name)}</button><div class="small">${f.folder}${f.isNew?' · new':''}</div></span>
     <span class="small">${f.unmatched?'Unclassified':TYPE_LABEL[f.type]}${!f.unmatched&&!f.manual?` · ${f.conf}%`:''}</span>
     <span>${f.ent?person(f.ent):'<span class="small">—</span>'}</span>
-    <span class="small">${k?`${areaName(clById(k[0]).area)} · ${k[1]}`:f.record?'Client record':f.unmatched||f.review?'—':'Not required'}</span>
+    <span class="small">${k?`${areaName(clById(k[0]).area)} · ${k[1]}`:f.record?'Customer record':f.unmatched||f.review?'—':'Not required'}</span>
     <span>${f.unmatched||f.review?`<button class="btn sm primary" data-act="manual" data-v="${f.id}">Match</button>`:''}</span></div>`}).join('')}
   </div></div>`;
 }
 
 /* ============ ADVISER — dashboard, sessions, discovery (fact find) ============ */
 const AREA_STAGE = {
- kas:{credit:4,tax:3,smsf:3,insurance:3,legal:3}, whi:{credit:4,tax:3,insurance:2}, oco:{credit:2,insurance:2}, hua:{tax:3,smsf:3,legal:2},
+ kas:{credit:3,tax:3,smsf:3,insurance:3,legal:3}, whi:{credit:4,tax:3,insurance:2}, oco:{credit:2,insurance:2}, hua:{tax:3,smsf:3,legal:2},
  ngu:{tax:1}, sha:{credit:5,insurance:4}, car:{credit:0,insurance:0}, moo:{tax:1,legal:1,credit:1}
 };
 const SESSIONS = [
  {id:'s1',day:'Today',date:'Thu 8 Oct',t:'2:00 pm',type:'Discovery',cid:'car',who:'Dr Ben Carter',where:'Video call',note:'Emergency registrar · first home and income protection',prep:'Pre-meeting questionnaire returned',pf:{title:'Dr',first:'Ben',last:'Carter',email:'ben.carter@mail.example',mobile:'0491 570 159',prof:'Medical',spec:'Emergency medicine (registrar)',stage:'Doctor-in-training'}},
  {id:'s2',day:'Tomorrow',date:'Fri 9 Oct',t:'10:30 am',type:'Discovery',cid:'moo',who:'Dr Hannah Moore',where:'Doncaster office',note:'GP practice owner · structuring, tax and a practice loan',prep:'Waiting on ID',pf:{title:'Dr',first:'Hannah',last:'Moore',email:'hannah.moore@mail.example',mobile:'0491 570 006',prof:'Medical',spec:'General practice (practice owner)',stage:'Established practitioner'}},
- {id:'s3',day:'Next week',date:'Mon 12 Oct',t:'9:00 am',type:'Strategy presentation',cid:'oco',who:'Dr Chris Walker',where:'Video call',note:'Practice acquisition loan and own-occupation TPD'},
+ {id:'s3',day:'Next week',date:'Mon 12 Oct',t:'9:00 am',type:'Presentation',cid:'oco',who:'Dr Chris Walker',where:'Video call',note:'Practice acquisition loan and own-occupation TPD'},
  {id:'s4',day:'Next week',date:'Tue 13 Oct',t:'4:00 pm',type:'Discovery',cid:null,who:'Dr Alex Rivera',where:'Video call',note:'New enquiry · dentist, referred by Riverside Dental',prep:'New enquiry',pf:{title:'Dr',first:'Alex',last:'Rivera',email:'alex.rivera@mail.example',mobile:'(03) 5550 4321',prof:'Dental',spec:'General dentistry',stage:'Established practitioner'}},
- {id:'s5',day:'Next week',date:'Wed 14 Oct',t:'11:00 am',type:'Handover',cid:'kas',who:'Drs Leonard & Emily Hart',where:'Internal',note:'Brief the insurance team on the own-occupation TPD quote'}
+ {id:'s5',day:'Next week',date:'Wed 14 Oct',t:'11:00 am',type:'Handover session',cid:'kas',who:'Drs Leonard & Emily Hart',where:'Internal',note:'Brief the insurance team on the own-occupation TPD quote'}
 ];
-const SESS_IC = {'Discovery':'note','Strategy presentation':'strat','Handover':'users'};
+const SESS_IC = {'Discovery':'note','Presentation':'strat','Handover session':'users'};
 
-const STAGE_SHORT=['Discovery','Strategy','Sign-off','Documents','Preparation','Submitted'];
+const STAGE_SHORT=['Discovery','Strategy','Acceptance','Documents','Ready','Lodged'];
 const kpiRow = list => `<div class="kpis">${list.map(([ic,l,v,sub,act,val])=>`<button class="kpi2" ${act?`data-act="${act}" data-v="${val}"`:'tabindex="-1" style="cursor:default"'}><span class="kpi2-i">${I(ic)}</span><span class="kpi2-l">${l}</span><b class="num">${v}</b><span class="small">${sub}</span></button>`).join('')}</div>`;
 const pageHead = (eyebrow,title,sub,actions='') => `<div class="head"><div class="stack" style="gap:4px">${eyebrow?`<span class="eyebrow">${eyebrow}</span>`:''}<h1>${title}</h1>${sub?`<span class="sub">${sub}</span>`:''}</div>${actions?`<div class="row">${actions}</div>`:''}</div>`;
 VIEWS.dash = () => {
@@ -1538,10 +1538,10 @@ VIEWS.dash = () => {
   const stageCount=i=>cs.filter(c=>c.stage===i).length;
   const shade=i=>`color-mix(in srgb,var(--brand) ${[22,36,50,64,80,100][i]}%,var(--surface))`;
   const kpis=[
-    ['users','Active clients',cs.length,'Across 5 advice areas','nav','clients'],
+    ['users','Active customers',cs.length,'Across 5 advice areas','nav','clients'],
     ['note','In discovery',cs.filter(c=>c.stage<=1).length,`${today} fact find${today===1?'':'s'} today`,'crmStage','all:0'],
     ['strat','Awaiting decision',pend,'Recommendations to sign off','go','strategy'],
-    ['file','Preparing applications',cs.filter(c=>c.stage===4).length+Object.values(AREA_STAGE).reduce((n,a)=>n+Object.values(a).filter(x=>x===4).length,0)-cs.filter(c=>c.stage===4).length,'Forms being pre-filled','crmStage','all:4']
+    ['file','Ready to lodge',cs.filter(c=>c.stage===4).length+Object.values(AREA_STAGE).reduce((n,a)=>n+Object.values(a).filter(x=>x===4).length,0)-cs.filter(c=>c.stage===4).length,'Every requirement met','crmStage','all:4']
   ];
   const areaCard=a=>{
     const st=cs.map(c=>AREA_STAGE[c.id]&&AREA_STAGE[c.id][a.id]).filter(x=>x!==undefined&&x!==null);
@@ -1549,9 +1549,9 @@ VIEWS.dash = () => {
     const top=per.map((k,i)=>[k,i]).filter(x=>x[0]).sort((x,y)=>y[0]-x[0]).slice(0,3);
     return `<button class="acard" data-act="crmArea2" data-v="${a.id}">
       <div class="row" style="gap:12px;flex-wrap:nowrap">${tile(a.id,'lg')}<div style="min-width:0"><b class="acard-n">${a.name}</b><span class="small">${{credit:'Home, practice and commercial loans',tax:'Medical accounting and tax',smsf:'Self managed super',insurance:'Life, TPD and income cover',legal:'Wills and asset protection'}[a.id]}</span></div></div>
-      <div class="acard-v"><b class="num">${n}</b><span class="small">client${n===1?'':'s'}</span></div>
-      <div class="sbar" aria-label="${a.name} clients by stage">${per.map((k,i)=>k?`<span style="flex:${k};background:${shade(i)}" title="${STAGES[i]}: ${k}"></span>`:'').join('')||'<span style="flex:1;background:var(--sunk)"></span>'}</div>
-      <div class="acard-l">${top.map(([k,i])=>`<span><i style="background:${shade(i)}"></i>${STAGE_SHORT[i]} <b class="num">${k}</b></span>`).join('')||'<span class="faint">No clients yet</span>'}</div>
+      <div class="acard-v"><b class="num">${n}</b><span class="small">customer${n===1?'':'s'}</span></div>
+      <div class="sbar" aria-label="${a.name} customers by stage">${per.map((k,i)=>k?`<span style="flex:${k};background:${shade(i)}" title="${STAGES[i]}: ${k}"></span>`:'').join('')||'<span style="flex:1;background:var(--sunk)"></span>'}</div>
+      <div class="acard-l">${top.map(([k,i])=>`<span><i style="background:${shade(i)}"></i>${STAGE_SHORT[i]} <b class="num">${k}</b></span>`).join('')||'<span class="faint">No customers yet</span>'}</div>
     </button>`;
   };
   const maxStage=Math.max(1,...STAGES.map((_,i)=>stageCount(i)));
@@ -1561,13 +1561,13 @@ VIEWS.dash = () => {
       <span class="ptrack"><span style="width:${list.length/maxStage*100}%;background:${shade(i)}"></span></span>
       <b class="num pcount">${list.length}</b><span class="chev">${I('chevR')}</span></button>`;}).join('');
   return `<div class="stack" style="gap:24px">
-  <div class="head"><div class="stack" style="gap:4px"><span class="eyebrow">Thursday 8 October</span><h1>Good morning, James</h1><span class="sub">${today?`You have ${today} discovery session today and `:''}${pend} recommendations waiting on clients.</span></div>
-    <div class="row"><button class="btn" data-act="nav" data-v="sessions">${I('clock')}Sessions</button><button class="btn primary" data-act="newClient">${I('plus')}New client</button></div></div>
+  <div class="head"><div class="stack" style="gap:4px"><span class="eyebrow">Thursday 8 October</span><h1>Good morning, James</h1><span class="sub">${today?`You have ${today} discovery session today and `:''}${pend} recommendations waiting on customers.</span></div>
+    <div class="row"><button class="btn" data-act="nav" data-v="sessions">${I('clock')}Sessions</button><button class="btn primary" data-act="newClient">${I('plus')}New customer</button></div></div>
   <div class="kpis">${kpis.map(([ic,l,v,sub,act,val])=>`<button class="kpi2" data-act="${act}" data-v="${val}"><span class="kpi2-i">${I(ic)}</span><span class="kpi2-l">${l}</span><b class="num">${v}</b><span class="small">${sub}</span></button>`).join('')}</div>
   <section class="stack" style="gap:12px"><div class="row"><h2 style="font-size:16px">Advice areas</h2><span class="grow"></span><span class="legend">${STAGE_SHORT.map((s,i)=>`<span><i style="background:${shade(i)}"></i>${s}</span>`).join('')}</span></div>
     <div class="acards">${AREAS.map(areaCard).join('')}</div></section>
   <div class="dash">
-    <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:8px"><div class="h" style="padding:0"><h2>Pipeline</h2><span class="small">Where every client is in the lifecycle</span></div></div>${pipe}</section>
+    <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:8px"><div class="h" style="padding:0"><h2>Pipeline</h2><span class="small">Where every customer is in the lifecycle</span></div></div>${pipe}</section>
     <aside class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>Upcoming sessions</h2><button class="btn ghost sm" data-act="nav" data-v="sessions">View all</button></div></div>
       ${SESSIONS.slice(0,4).map(sessRow).join('')}</aside>
   </div></div>`;
@@ -1581,14 +1581,14 @@ function sessRow(s){
 VIEWS.sessions = () => {
   const days=[...new Set(SESSIONS.map(s=>s.date))];
   return `<div class="stack">${pageHead('James Okafor · Advisor','Sessions','Discovery meetings, strategy presentations and team handovers.',`<button class="btn primary" data-act="toast" data-v="Schedule a session — syncs with the adviser’s calendar">${I('plus')}Schedule</button>`)}
-  ${kpiRow([['note','Discovery',SESSIONS.filter(x=>x.type==='Discovery').length,'Fact finds booked'],['strat','Strategy',SESSIONS.filter(x=>x.type==='Strategy presentation').length,'Presentations booked'],['users','Handover',SESSIONS.filter(x=>x.type==='Handover').length,'Team briefings'],['clock','This week',SESSIONS.filter(x=>x.day==='Today'||x.day==='Tomorrow').length,'Today and tomorrow']])}
-  ${days.map(d=>{const ss=SESSIONS.filter(x=>x.date===d);return `<section class="stack" style="gap:10px"><h2 style="font-size:15px">${ss[0].day==='Today'||ss[0].day==='Tomorrow'?ss[0].day+' · ':''}${d}</h2><div class="panel" style="overflow:hidden">${ss.map(x=>`<div class="srow"><div class="sdate ${x.day==='Today'?'today':''}"><b>${x.t}</b><span>${x.where.split(' ')[0]}</span></div><div style="min-width:0;flex:1"><div class="row" style="gap:8px"><b style="font-size:13.5px">${esc(x.who)}</b><span class="tag">${x.type}</span></div><div class="small">${esc(x.note)}${x.prep?' · '+esc(x.prep):''}</div></div><div class="row" style="gap:6px">${x.type==='Discovery'&&!x.done?`<button class="btn sm primary" data-act="startDisc" data-v="${x.id}">Start fact find</button>`:x.done?'<span class="pill p-ok">Done</span>':''}${x.cid?`<button class="btn sm" data-act="openCust" data-v="${x.cid}">Open client</button>`:''}</div></div>`).join('')}</div></section>`}).join('')}</div>`;
+  ${kpiRow([['note','Discovery',SESSIONS.filter(x=>x.type==='Discovery').length,'Fact finds booked'],['strat','Strategy',SESSIONS.filter(x=>x.type==='Presentation').length,'Presentations booked'],['users','Handover session',SESSIONS.filter(x=>x.type==='Handover session').length,'Team briefings'],['clock','This week',SESSIONS.filter(x=>x.day==='Today'||x.day==='Tomorrow').length,'Today and tomorrow']])}
+  ${days.map(d=>{const ss=SESSIONS.filter(x=>x.date===d);return `<section class="stack" style="gap:10px"><h2 style="font-size:15px">${ss[0].day==='Today'||ss[0].day==='Tomorrow'?ss[0].day+' · ':''}${d}</h2><div class="panel" style="overflow:hidden">${ss.map(x=>`<div class="srow"><div class="sdate ${x.day==='Today'?'today':''}"><b>${x.t}</b><span>${x.where.split(' ')[0]}</span></div><div style="min-width:0;flex:1"><div class="row" style="gap:8px"><b style="font-size:13.5px">${esc(x.who)}</b><span class="tag">${x.type}</span></div><div class="small">${esc(x.note)}${x.prep?' · '+esc(x.prep):''}</div></div><div class="row" style="gap:6px">${x.type==='Discovery'&&!x.done?`<button class="btn sm primary" data-act="startDisc" data-v="${x.id}">Start fact find</button>`:x.done?'<span class="pill p-ok">Done</span>':''}${x.cid?`<button class="btn sm" data-act="openCust" data-v="${x.cid}">Open customer</button>`:''}</div></div>`).join('')}</div></section>`}).join('')}</div>`;
 };
 
 /* ---------- Fact find / discovery wizard ---------- */
 const NC_STEPS = ['Household','Work & income','Assets & liabilities','Entities','Advice needs','Review'];
 function ncNew(pf={}){
-  return {step:0, sec:true, f:{'p1.title':pf.title||'Dr','p1.first':pf.first||'','p1.last':pf.last||'','p1.email':pf.email||'','p1.mobile':pf.mobile||'','p1.prof':pf.prof||'Medical','p1.spec':pf.spec||'','p1.stage':pf.stage||'Specialist','p1.emp':'PAYG','p1.marital':'Married','p2.title':'Dr','p2.rel':'Spouse','p2.emp':'PAYG','p2.prof':'Medical','p2.stage':'Doctor-in-training','tax.status':'New client','cover':'No','will':'No'},
+  return {step:0, sec:true, f:{'p1.title':pf.title||'Dr','p1.first':pf.first||'','p1.last':pf.last||'','p1.email':pf.email||'','p1.mobile':pf.mobile||'','p1.prof':pf.prof||'Medical','p1.spec':pf.spec||'','p1.stage':pf.stage||'Specialist','p1.emp':'PAYG','p1.marital':'Married','p2.title':'Dr','p2.rel':'Spouse','p2.emp':'PAYG','p2.prof':'Medical','p2.stage':'Doctor-in-training','tax.status':'New customer','cover':'No','will':'No'},
     deps:[{name:'',dob:'',rel:'Son',lives:'Yes'}], assets:[{type:'Home (owner-occupied)',desc:'',owner:'Joint',value:''}], liabs:[{type:'Home loan',lender:'',owner:'Joint',bal:''}], ents:[],
     areas:{credit:true,tax:true,smsf:false,insurance:true,legal:false}, notes:{}, from:pf.first?`${pf.title||''} ${pf.first} ${pf.last}`.trim():''};
 }
@@ -1630,12 +1630,12 @@ VIEWS.newclient = () => {
       ${n.liabs.map((a,i)=>`<div class="fgrid frow">${lsel('liabs',i,'type','Type',['Home loan','Investment loan','Practice loan','Car loan','Credit card','HECS / HELP','Other'])}${lin('liabs',i,'lender','Lender')}${lsel('liabs',i,'owner','Owner',['Joint','Primary','Secondary','Company','Trust'])}${lin('liabs',i,'bal','Balance',{ph:'$'})}<button class="ibtn" aria-label="Remove" data-act="ncDel" data-v="liabs.${i}">${I('x')}</button></div>`).join('')}</div>`;
   if (st===3) body = `<div class="fgroup"><div class="fgroup-h"><b>Companies, trusts and super funds</b><span class="small">Practice entities, service trusts, family trusts and SMSFs</span><span class="grow"></span><button class="btn sm" data-act="ncAdd" data-v="ents">${I('plus')}Add entity</button></div>
       ${n.ents.map((a,i)=>`<div class="fgrid frow">${lsel('ents',i,'type','Type',['Company','Service trust','Family trust','SMSF','Partnership'])}${lin('ents',i,'name','Name')}${lin('ents',i,'abn','ABN / ACN')}${lsel('ents',i,'role','Applicant’s role',['Director','Trustee','Beneficiary','Member','Partner'])}<button class="ibtn" aria-label="Remove" data-act="ncDel" data-v="ents.${i}">${I('x')}</button></div>`).join('')||'<span class="small">No entities yet</span>'}</div>
-      <div class="fgroup"><div class="fgroup-h"><b>Tax</b></div><div class="fgrid">${sel('tax.status','Tax client',['New client','Existing client'])}${sel('tax.gst','GST registered',['No','Yes'])}${inp('tax.prev','Previous accountant',{w:true})}</div></div>`;
-  if (st===4) body = `<div class="fgroup"><div class="fgroup-h"><b>Which areas does the client need help with?</b></div>
+      <div class="fgroup"><div class="fgroup-h"><b>Tax</b></div><div class="fgrid">${sel('tax.status','Tax customer',['New customer','Existing customer'])}${sel('tax.gst','GST registered',['No','Yes'])}${inp('tax.prev','Previous accountant',{w:true})}</div></div>`;
+  if (st===4) body = `<div class="fgroup"><div class="fgroup-h"><b>Which areas does the customer need help with?</b></div>
       <div class="needs">${AREAS.map(a=>`<label class="need ${n.areas[a.id]?'on':''}"><input type="checkbox" data-act="ncArea" data-v="${a.id}" ${n.areas[a.id]?'checked':''}>${tile(a.id)}<span><b>${a.name}</b><span class="small">${AREA_DESC[a.id]}</span></span></label>`).join('')}</div></div>
-      <div class="fgroup"><div class="fgroup-h"><b>Current position</b></div><div class="fgrid">${sel('cover','Existing personal insurance',['No','Yes – held personally','Yes – held in super'])}${sel('will','Existing will',['No','Yes – over 5 years old','Yes – current'])}${inp('goals','Goals in the client’s words',{w:true,ph:'e.g. buy first home, protect income, set up practice'})}</div></div>`;
+      <div class="fgroup"><div class="fgroup-h"><b>Current position</b></div><div class="fgrid">${sel('cover','Existing personal insurance',['No','Yes – held personally','Yes – held in super'])}${sel('will','Existing will',['No','Yes – over 5 years old','Yes – current'])}${inp('goals','Goals in the customer’s words',{w:true,ph:'e.g. buy first home, protect income, set up practice'})}</div></div>`;
   if (st===5){
-    const name=[f['p1.first'],f['p1.last']].filter(Boolean).join(' ')||'New client';
+    const name=[f['p1.first'],f['p1.last']].filter(Boolean).join(' ')||'New customer';
     const trig=[];
     if (/Self|private/.test(f['p1.emp']||'')||/Self|private/.test(f['p2.emp']||'')) trig.push('Self-employed income: tax returns, notices of assessment, practice financials and ABN extract');
     if (/PAYG/.test(f['p1.emp']||'')) trig.push('PAYG income: two recent payslips and salary credits');
@@ -1645,11 +1645,11 @@ VIEWS.newclient = () => {
     if (['Medical','Dental'].includes(f['p1.prof'])&&n.areas.insurance) trig.push('Insurance: AHPRA registration and a procedures declaration per doctor');
     if (/Yes/.test(f.cover||'')&&n.areas.insurance) trig.push('Existing cover: current policy schedules for comparison');
     if (n.deps.filter(d=>d.name).length&&n.areas.legal) trig.push('Wills: family and dependants schedule');
-    if (f['tax.status']==='New client'&&n.areas.tax) trig.push('New tax client: last year’s return and notice of assessment');
+    if (f['tax.status']==='New customer'&&n.areas.tax) trig.push('New tax customer: last year’s return and notice of assessment');
     body = `<div class="review">
       <div class="panel sec" style="gap:10px"><h2>Summary</h2><dl class="kv"><dt>Primary</dt><dd>${esc(f['p1.title']||'')} ${esc(name)} · ${esc(f['p1.spec']||f['p1.prof'])}</dd>${n.sec?`<dt>Secondary</dt><dd>${esc(f['p2.title']||'')} ${esc([f['p2.first'],f['p2.last']].filter(Boolean).join(' ')||'—')} · ${esc(f['p2.rel'])}</dd>`:''}<dt>Dependants</dt><dd>${n.deps.filter(d=>d.name).map(d=>esc(d.name)).join(', ')||'None'}</dd><dt>Assets</dt><dd>${n.assets.length} · Liabilities ${n.liabs.length} · Entities ${n.ents.length}</dd><dt>Areas</dt><dd><span class="row" style="gap:4px">${AREAS.filter(a=>n.areas[a.id]).map(a=>tile(a.id,'sm')).join('')||'None selected'}</span></dd></dl></div>
-      <div class="panel sec" style="gap:10px"><h2>What happens when you create this client</h2>
-        <div class="chk ok">${I('check')}<span>Client record added to Clients at the <b>Discovery</b> stage, adviser James Okafor</span></div>
+      <div class="panel sec" style="gap:10px"><h2>What happens when you create this customer</h2>
+        <div class="chk ok">${I('check')}<span>Customer record added to Customers at the <b>Discovery</b> stage, adviser James Okafor</span></div>
         <div class="chk ok">${I('check')}<span>Vault folder created: <span class="mono">Othello / Clients / ${esc(name)}</span> with the 8 standard folders</span></div>
         <div class="chk ok">${I('check')}<span>Details from this fact find pre-fill every future application form</span></div>
         <div class="sect-t" style="margin-top:6px">Documents these answers will trigger</div>
@@ -1657,11 +1657,11 @@ VIEWS.newclient = () => {
       </div></div>`;
   }
   return `<div class="stack">
-    <div class="head"><div class="stack" style="gap:4px"><h1>${n.from?'Fact find — '+esc(n.from):'New client — fact find'}</h1><span class="sub">Capture the household during discovery. Everything here becomes the client record and drives each document checklist.</span></div>
+    <div class="head"><div class="stack" style="gap:4px"><h1>${n.from?'Fact find — '+esc(n.from):'New customer — fact find'}</h1><span class="sub">Capture the household during discovery. Everything here becomes the customer record and drives each document checklist.</span></div>
       <span class="small">Draft saved just now</span></div>
     ${stepper}
     <div class="panel sec" style="gap:18px;padding:22px">${body}</div>
-    <div class="row"><button class="btn" data-act="ncBack" ${st===0?'disabled':''}>Back</button><span class="grow"></span><button class="btn ghost" data-act="toast" data-v="Draft saved — continue any time from Clients">Save draft</button>${st<NC_STEPS.length-1?`<button class="btn primary" data-act="ncNext">Continue</button>`:`<button class="btn primary" data-act="ncCreate">${I('check')}Create client</button>`}</div>
+    <div class="row"><button class="btn" data-act="ncBack" ${st===0?'disabled':''}>Back</button><span class="grow"></span><button class="btn ghost" data-act="toast" data-v="Draft saved — continue any time from Customers">Save draft</button>${st<NC_STEPS.length-1?`<button class="btn primary" data-act="ncNext">Continue</button>`:`<button class="btn primary" data-act="ncCreate">${I('check')}Create customer</button>`}</div>
   </div>`;
 };
 
@@ -1679,7 +1679,7 @@ function cfgHome(){
       <div class="sbar">${live?`<span style="flex:${live};background:var(--brand)" title="${live} live"></span>`:''}${d?`<span style="flex:${d};background:var(--warn)" title="${d} draft"></span>`:''}</div>
       <div class="acard-l"><span><i style="background:var(--brand)"></i>Live <b class="num">${live}</b></span><span><i style="background:var(--warn)"></i>Draft <b class="num">${d}</b></span><span><i style="background:var(--line-strong)"></i>${a.providers.length} provider${a.providers.length>1?'s':''} <b class="num" style="font-weight:500;color:var(--muted)">${a.providers.slice(0,2).map(p=>short(p.name)).join(', ')}${a.providers.length>2?' +'+(a.providers.length-2):''}</b></span></div></button>`;};
   return `<div class="stack" style="gap:24px">
-  ${pageHead('Alex Morgan · Client Administrator','Advice areas','Map each Medcentric service to its providers, products, application forms and the documents clients are asked for.',`<span class="pill p-warn">${dr} unpublished change${dr===1?'':'s'}</span><button class="btn primary" data-act="toast" data-v="Changes submitted for compliance approval">Submit for approval</button>`)}
+  ${pageHead('Alex Morgan · Client Administrator','Advice areas','Map each Medcentric service to its providers, products, application forms and the documents customers are asked for.',`<span class="pill p-warn">${dr} unpublished change${dr===1?'':'s'}</span><button class="btn primary" data-act="toast" data-v="Changes submitted for compliance approval">Submit for approval</button>`)}
   ${kpiRow([['grid','Advice areas',AREAS.length,'Medcentric services'],['building','Providers',provN,'Lenders, insurers and partners'],['file','Products',all.length,`${all.filter(p=>p.form).length} with an application form`],['library','Documents',libN,'In the shared library','nav','cfgLib']])}
   <section class="stack" style="gap:12px"><div class="row"><h2 style="font-size:16px">Areas</h2><span class="grow"></span><span class="legend"><span><i style="background:var(--brand)"></i>Live</span><span><i style="background:var(--warn)"></i>Draft</span></span></div>
     <div class="acards c3">${AREAS.map(card).join('')}
@@ -1697,7 +1697,7 @@ function cfgArea(){
   <div class="head"><div class="ph">${tile(a.id,'lg')}<div class="stack" style="gap:6px"><h1>${a.name}</h1><span class="sub">${AREA_DESC[a.id]}</span>
     <div class="meta-row"><span><b>${a.providers.length}</b> provider${a.providers.length>1?'s':''}</span><span><b>${prods.length}</b> products</span><span><b>${prods.filter(p=>p.form).length}</b> forms linked</span><span><b>${prods.filter(p=>p.status==='Draft').length}</b> in draft</span></div></div></div>
     <div class="row">${a.id==='credit'?`<button class="btn" data-act="toast" data-v="Import maps spreadsheet columns to products, forms and documents">${I('upload')}Import</button>`:''}<button class="btn" data-act="toast" data-v="Add a provider from the approved product list">${I('plus')}Provider</button><button class="btn primary" data-act="addProduct">${I('plus')}Product</button></div></div>
-  <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:12px"><div class="h" style="padding:0"><h2>Product catalogue</h2><span class="small">Select ✓ to open a product’s documents and application form</span></div></div>
+  <section class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:12px"><div class="h" style="padding:0"><h2>Product list</h2><span class="small">Select ✓ to open a product’s requirement rules and application form</span></div></div>
     <div class="cat"><table><thead><tr><th>Product</th>${a.providers.map(p=>`<th class="pv">${esc(short(p.name))}</th>`).join('')}<th class="r" style="text-align:right">Documents</th></tr></thead><tbody>
     ${cats.map(c=>`<tr class="cg"><td colspan="${a.providers.length+2}">${esc(c)}</td></tr>${names.filter(n=>n.cat===c).map(n=>`<tr><td style="font-weight:500">${esc(n.name)}</td>${a.providers.map(p=>`<td class="pc">${cell(p,n.name)}</td>`).join('')}<td class="num small" style="text-align:right">${n.docs}</td></tr>`).join('')}`).join('')}
     </tbody></table></div></section>
@@ -1733,13 +1733,13 @@ function cfgProduct(){
       <div class="meta-row"><span>${esc(prov.name)}</span><span>${esc(prod.cat)}</span><span><b>${prod.docs.length}</b> documents</span></div></div></div></div>
     <section class="panel sec"><div class="h"><h2>Application form</h2><span class="small">Version controlled · ${prod.fields} fields mapped</span></div>
       <div class="file"><button class="pdf" style="border:0;cursor:pointer" data-act="tplView" data-v="${prod.id}" aria-label="Open template">PDF</button><div style="flex:1;min-width:160px"><button class="flink" style="font-size:14px;font-weight:600;color:var(--brand-ink)" data-act="tplView" data-v="${prod.id}">${esc(prod.form)}</button><div class="small">Current version ${prod.ver}</div></div><button class="btn sm" data-act="toast" data-v="New version uploaded. The previous one stays in history.">${I('upload')}New version</button></div></section>
-    <section class="panel sec"><div class="h"><h2>Supporting documents</h2><button class="btn ghost sm" data-act="cfgAccAll">${S.cfg.open.length===tnames.length?'Collapse all':'Expand all'}</button></div>
+    <section class="panel sec"><div class="h"><h2>Requirement rules</h2><button class="btn ghost sm" data-act="cfgAccAll">${S.cfg.open.length===tnames.length?'Collapse all':'Expand all'}</button></div>
       <div class="accs">${accs}</div></section></div>
     <aside class="panel prev"><span class="eyebrow">Checklist preview</span>${area.id==='credit'&&prod.cat!=='Commercial'?`<span class="seg">${[['PAYG','PAYG couple'],['SE','Self-employed couple']].map(([k,l])=>`<button class="${S.cfg.pv===k?'on':''}" data-act="cfgPv" data-v="${k}">${l}</button>`).join('')}</span><span class="small">Refinancing one property</span>`:`<span class="small">${area.id==='insurance'?'Two doctors, one with existing cover':'Sample household'}</span>`}
       <div class="check"><span class="box"></span><div><div style="font-weight:500">Application form</div><div class="s">Pre-filled by Othello</div></div></div>
-      ${Object.entries(counts).slice(0,8).map(([n,k])=>`<div class="check"><span class="box"></span><div><div style="font-weight:500">${esc(n)}${k>1?` ×${k}`:''}</div><div class="s">${k>1?'One per person':'Requested from the client'}</div></div></div>`).join('')}
+      ${Object.entries(counts).slice(0,8).map(([n,k])=>`<div class="check"><span class="box"></span><div><div style="font-weight:500">${esc(n)}${k>1?` ×${k}`:''}</div><div class="s">${k>1?'One per person':'Requested from the customer'}</div></div></div>`).join('')}
       ${Object.keys(counts).length>8?`<span class="small">+ ${Object.keys(counts).length-8} more</span>`:''}
-      <div class="total"><span class="sub">Client is asked for</span><b>${cust.length+1} items</b></div>
+      <div class="total"><span class="sub">Customer is asked for</span><b>${cust.length+1} items</b></div>
       <span class="small">${items.length-cust.length} handled by the firm · ${skipped.length} not needed for this household</span></aside></div>`;
 }
 function cfgLibrary(){
@@ -1756,37 +1756,37 @@ function cfgLibrary(){
   </div></div></div>`;
 }
 
-/* ============ CLIENT VIEW (team member's client-centric summary) ============ */
+/* ============ CLIENT VIEW (team member's customer-centric summary) ============ */
 TABS.clientview = () => { const todos=custTodos(); const cls=allCl();
   const outstanding=cls.reduce((n,cl)=>n+buildChecklist(cl).items.filter(it=>it.by==='Customer'&&['missing','requested'].includes(itemStatus(it))).length,0);
   return `<div class="stack" style="gap:20px">
-  <div class="msg info">${I('info')}<span>Everything this client needs to do, where they are in the lifecycle and the decisions they still need to make. Use it on calls and in meetings.</span></div>
+  <div class="msg info">${I('info')}<span>Everything this customer needs to do, where they are in the lifecycle and the decisions they still need to make. Use it on calls and in meetings.</span></div>
   <div class="phome">
     <div class="stack" style="gap:16px;min-width:0">
-      <div class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>Client to do</h2><span class="small">${todos.length} actions · ${outstanding} documents outstanding</span></div></div>
-        ${todos.map(x=>`<div class="att"><span class="ic">${I('alert')}</span><div style="min-width:0"><div style="font-weight:500">${esc(x.t)}</div><div class="small">${x.who&&x.who!=='hh'?person(x.who)+' · ':''}${x.s?`Message to client: “${esc(x.s)}”`:''}</div></div><button class="btn sm" data-act="${x.a}" data-v="${x.v}">${x.b}</button></div>`).join('')||'<div class="sec small">Nothing outstanding.</div>'}</div>
-      <div class="panel sec" style="gap:14px"><h2>Applications</h2>${cls.map(cl=>{const c=clStats(cl);const pct=Math.round(c.custDone/c.cust*100);return `<button class="stack" style="gap:6px;border:0;background:none;padding:0;text-align:left" data-act="openCl" data-v="${cl.id}"><div class="row">${tile(cl.area,'sm')}<span style="font-weight:500">${esc(cl.title)}</span><span class="grow"></span><span class="small">${cl.id==='credit'?'Application preparation':'Document collection'}</span></div><div class="bar"><span class="v" style="width:${pct}%"></span></div><span class="small num">Client has supplied ${c.custDone} of ${c.cust} documents</span></button>`}).join('')}</div>
+      <div class="panel" style="overflow:hidden"><div class="sec" style="padding-bottom:4px"><div class="h" style="padding:0"><h2>Customer to do</h2><span class="small">${todos.length} actions · ${outstanding} documents outstanding</span></div></div>
+        ${todos.map(x=>`<div class="att"><span class="ic">${I('alert')}</span><div style="min-width:0"><div style="font-weight:500">${esc(x.t)}</div><div class="small">${x.who&&x.who!=='hh'?person(x.who)+' · ':''}${x.s?`Message to customer: “${esc(x.s)}”`:''}</div></div><button class="btn sm" data-act="${x.a}" data-v="${x.v}">${x.b}</button></div>`).join('')||'<div class="sec small">Nothing outstanding.</div>'}</div>
+      <div class="panel sec" style="gap:14px"><h2>Applications</h2>${cls.map(cl=>{const c=clStats(cl);const pct=Math.round(c.custDone/c.cust*100);return `<button class="stack" style="gap:6px;border:0;background:none;padding:0;text-align:left" data-act="openCl" data-v="${cl.id}"><div class="row">${tile(cl.area,'sm')}<span style="font-weight:500">${esc(cl.title)}</span><span class="grow"></span><span class="small">Document collection</span></div><div class="bar"><span class="v" style="width:${pct}%"></span></div><span class="small num">Customer has supplied ${c.custDone} of ${c.cust} documents</span></button>`}).join('')}</div>
       <div id="recs">${strategyView(true)}</div>
     </div>
     <aside class="panel sec" style="gap:16px"><h2>Lifecycle</h2><div class="journey">${STAGES.map((s,i)=>`<div class="jstep ${i<3?'done':i===3?'cur':'todo'}"><span class="dt">${i<3?'✓':i+1}</span><div><b>${s}</b><span class="small">${i<3?['09 Sep','19 Sep','22 Sep'][i]:i===3?'In progress':i===5?'MVP ends here':''}</span></div></div>`).join('')}</div>
       <div class="sect-t">Household</div><div class="stack" style="gap:8px">${person('p1')}${person('p2')}<span class="small">Oliver (9) · Ruby (6)</span></div></aside>
   </div></div>`; };
-/* ============ VAULT SETTINGS (client admin — no client data) ============ */
+/* ============ VAULT SETTINGS (client admin — no customer data) ============ */
 function vaultSettings(){
   return `<div class="stack">
-  ${pageHead('Workspace','Vault settings','Connect your firm’s Google Drive and set how client folders are organised. Team members work with client documents in the Vault.')}
-  ${kpiRow([['vault','Storage',S.drive?'Connected':'Off','Google Drive · Medcentric'],['folder','Client folders',112,'Under Othello / Clients'],['refresh','Last sync','4:58 pm','Every 30 minutes'],['grid','Folder template',DRIVE_FOLDERS.length+' folders','Created for each new client']])}
+  ${pageHead('Workspace','Vault settings','Connect your firm’s Google Drive and set how customer folders are organised. The specialist team works with customer documents in the Vault.')}
+  ${kpiRow([['vault','Storage',S.drive?'Connected':'Off','Google Drive · Medcentric'],['folder','Customer folders',112,'Under Othello / Clients'],['refresh','Last sync','4:58 pm','Every 30 minutes'],['grid','Folder template',DRIVE_FOLDERS.length+' folders','Created for each new customer']])}
   <section class="panel sec" style="gap:12px"><div class="h"><h2>Storage connection</h2>${S.drive?'<span class="pill p-ok">Connected</span>':'<span class="pill p-mut">Not connected</span>'}</div>
     <div class="file"><span style="width:40px;height:40px;display:grid;place-items:center;border-radius:8px;background:var(--sunk)">${driveLogo()}</span><div style="flex:1;min-width:180px"><b>Google Drive</b><div class="small">${S.drive?'admin@medcentric.com.au · root folder <span class="mono">My Drive / Othello / Clients</span>':'Connect a Google Workspace account and choose the root folder'}</div></div>
       ${S.drive?'<button class="btn sm" data-act="connect">Change root folder</button><button class="btn sm danger" data-act="disconnect">Disconnect</button>':'<button class="btn primary" data-act="connect">Connect</button>'}</div>
     <div class="file" style="opacity:.6"><span class="pdf" style="background:var(--sunk);color:var(--muted)">SP</span><div style="flex:1"><b>SharePoint / OneDrive</b><div class="small">Not in MVP — firms’ existing storage only</div></div><span class="pill p-mut">Later</span></div></section>
   <div class="split">
-    <section class="grow panel sec" style="gap:4px"><div class="h"><h2>Client folder template</h2><span class="small">Created for every new client</span></div>
+    <section class="grow panel sec" style="gap:4px"><div class="h"><h2>Customer folder template</h2><span class="small">Created for every new customer</span></div>
       <span class="mono faint" style="padding-bottom:6px">Othello / Clients / {Primary applicant full name} /</span>
       ${DRIVE_FOLDERS.map(f=>`<div class="docrow" style="grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)"><span class="row" style="gap:10px"><span class="fold"></span><span style="font-weight:500">${f}</span></span><span class="r">${FOLDER_MAP[f]}</span></div>`).join('')}
-      <div class="row" style="margin-top:10px"><button class="btn sm" data-act="toast" data-v="Add a folder to the template — existing client folders are not changed">+ Add folder</button></div></section>
+      <div class="row" style="margin-top:10px"><button class="btn sm" data-act="toast" data-v="Add a folder to the template — existing customer folders are not changed">+ Add folder</button></div></section>
     <aside class="panel sec" style="gap:12px"><h2>Scanning & matching</h2>
-      ${[['Schedule','Every 30 minutes and on demand'],['Classification','Reads each document and detects its type'],['Confidence','Below 80% goes to team members to match'],['Client match','Folder name vs fact find names — exact, then similar (85%+)'],['Access','Read files, create folders · never deletes']].map(([k,v])=>`<div class="stack" style="gap:2px"><span class="small" style="font-weight:600">${k}</span><span style="font-size:13.5px">${v}</span></div>`).join('')}</aside>
+      ${[['Schedule','Every 30 minutes and on demand'],['Classification','Reads each document and detects its type'],['Confidence','Below 80% goes to team members to match'],['Customer match','Folder name vs fact find names — exact, then similar (85%+)'],['Access','Read files, create folders · never deletes']].map(([k,v])=>`<div class="stack" style="gap:2px"><span class="small" style="font-weight:600">${k}</span><span style="font-size:13.5px">${v}</span></div>`).join('')}</aside>
   </div></div>`;
 }
 function custTodos(){
@@ -1844,26 +1844,26 @@ function manualModal(id){
    <div class="row"><button class="btn ghost" data-act="ignoreFile" data-v="${f.id}">Not relevant</button><span class="grow"></span><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doManual" data-v="${f.id}">Confirm match</button></div>`;
 }
 function oneOffModal(){ const cl=clById(S.cl);
-  return `${dhead('Add a one-off document')}<span class="sub">Only for ${esc(cl.title)} for this client. The product template doesn’t change.</span>
+  return `${dhead('Add a one-off document')}<span class="sub">Only for ${esc(cl.title)} for this customer. The product template doesn’t change.</span>
    <div class="field"><label>Document</label><input class="in" id="oo-n" value="${cl.id==='credit'?'Renovation quote or builder’s contract':cl.id==='tax'?'Work-related expense receipts FY2026':cl.id==='smsf'?'Rollover benefit statement':'Copy of existing will'}"></div>
    <div class="field"><label>From</label><select class="in" id="oo-e"><option value="p1">Leonard (primary)</option><option value="p2">Emily (secondary)</option><option value="hh">Household</option></select></div>
-   <div class="field"><label>Reason shown to the client</label><textarea class="in" id="oo-r">${cl.id==='credit'?'ANZ needs evidence of the renovation cost included in the top-up.':'Needed to complete this work.'}</textarea></div>
+   <div class="field"><label>Reason shown to the customer</label><textarea class="in" id="oo-r">${cl.id==='credit'?'ANZ needs evidence of the renovation cost included in the top-up.':'Needed to complete this work.'}</textarea></div>
    <div class="row" style="justify-content:flex-end"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doOneOff">Add to checklist</button></div>`; }
 function connectModal(step){
   if (step===1) return `${dhead('Connect Google Drive')}<div class="gacct"><span class="av">A</span><div><b>Alex Morgan</b><div class="small">admin@medcentric.com.au</div></div></div>
    <div><b style="font-size:13.5px">Othello Vault wants to:</b><div class="scope" style="margin-top:6px">${I('check')}<span>See, edit and organise files in folders you choose</span></div><div class="scope">${I('check')}<span>See your folder structure to pick a root folder</span></div><div class="scope">${I('check')}<span>See your email address</span></div></div>
    <span class="small">Othello never deletes files. You can revoke access from your Google Account at any time.</span>
    <div class="row" style="justify-content:flex-end"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="connect2">Allow</button></div>`;
-  return `${dhead('Choose the root folder')}<span class="sub">Othello expects one folder per client inside it.</span><span class="mono faint">My Drive / Othello /</span>
+  return `${dhead('Choose the root folder')}<span class="sub">Othello expects one folder per customer inside it.</span><span class="mono faint">My Drive / Othello /</span>
    <div class="picker">${[['Clients','112 folders'],['Templates','9 files'],['Archive 2023','48 folders']].map(([f,n],i)=>`<button class="${i===0?'on':''}" data-act="pick" data-v="${f}"><span class="fold"></span><span style="flex:1">${f}</span><span class="small">${n}</span></button>`).join('')}</div>
-   <div class="msg info">${I('info')}<span>3 clients matched automatically, 2 have no folder yet.</span></div>
+   <div class="msg info">${I('info')}<span>3 customers matched automatically, 2 have no folder yet.</span></div>
    <div class="row" style="justify-content:flex-end"><button class="btn" data-act="connect">Back</button><button class="btn primary" data-act="connect3">Use Clients</button></div>`;
 }
 function folderModal(cid){ const c=S.customers.find(x=>x.id===cid);
-  return `${dhead('Link a Drive folder')}<span class="sub">${esc(c.name)} — choose the folder that holds this client’s documents.</span>
+  return `${dhead('Link a Drive folder')}<span class="sub">${esc(c.name)} — choose the folder that holds this customer’s documents.</span>
    <div class="picker">${UNLINKED_FOLDERS.map((f,i)=>`<button class="${i===0?'on':''}" data-act="pick" data-v="${f}"><span class="fold"></span><span style="flex:1">${f}</span><span class="small">${['71% name match','69%','—','64%'][i]}</span></button>`).join('')}</div>
    <div class="row"><button class="btn ghost" data-act="folderCreate" data-v="${cid}">Create new folder</button><span class="grow"></span><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doFolder" data-v="${cid}">Link folder</button></div>`; }
-function rejectModal(key){ return `${dhead('Reject document')}<div class="field"><label>Reason sent to the client</label><textarea class="in" id="rj-r">This document is older than allowed. Please upload a current copy.</textarea></div><div class="row" style="justify-content:flex-end"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doReject" data-v="${key}">Reject and notify</button></div>`; }
+function rejectModal(key){ return `${dhead('Reject document')}<div class="field"><label>Reason sent to the customer</label><textarea class="in" id="rj-r">This document is older than allowed. Please upload a current copy.</textarea></div><div class="row" style="justify-content:flex-end"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="doReject" data-v="${key}">Reject and notify</button></div>`; }
 function custConfirmModal(id){ const d=discFor(id);
   return `${dhead(d.field==='Surname'?'Marriage certificate':d.field)}<span class="sub">${esc(d.cust)}</span>
    ${id==='D2'?`<div class="field"><label>Upload</label><input class="in" type="file" style="padding-top:8px"></div>`:`<div class="field"><label>Your reply</label><textarea class="in">${id==='D1'?'My legal name is Leonard Hart. I go by Leo.':id==='D3'?'Done — I’ve updated my address with VicRoads.':'My date of birth is 14/03/1988.'}</textarea></div>`}
@@ -1890,8 +1890,8 @@ const A = {
   doAddProduct:()=>{const a=AREA(S.cfg.area),p=a.providers.find(x=>x.id===$('#ap-p').value),id='np'+Date.now(),base=p.products[0];p.products.push({id,name:$('#ap-n').value,cat:base.cat,docs:[...base.docs],form:`${p.name} – ${$('#ap-n').value}.pdf`,fields:0,ver:'v1',status:'Draft'});S.modal=null;S.cfg.screen='product';S.cfg.prod=id;return toast('Draft product added · sent for compliance review');},
   file:v=>{S.modal=null; S.drawer=()=>fileDrawer(v);}, close:()=>{S.drawer=S.modal=null; S.wide=false;},
   verify:k=>{S.items[k]={status:'verified'}; S.drawer=null; return toast('Verified — checklist item fulfilled');},
-  reject:k=>{S.drawer=null; S.modal=()=>rejectModal(k);}, doReject:k=>{S.items[k]={status:'rejected',note:$('#rj-r').value}; S.modal=null; return toast('Rejected — client asked to re-upload');},
-  request:k=>{S.requested[k]=true; return toast('Request sent to the client portal');}, markInternal:k=>{S.items[k]={status:'verified'};},
+  reject:k=>{S.drawer=null; S.modal=()=>rejectModal(k);}, doReject:k=>{S.items[k]={status:'rejected',note:$('#rj-r').value}; S.modal=null; return toast('Rejected — customer asked to re-upload');},
+  request:k=>{S.requested[k]=true; return toast('Request sent to the customer portal');}, markInternal:k=>{S.items[k]={status:'verified'};},
   manual:v=>{S.drawer=null; S.modal=()=>manualModal(v);},
   doManual:v=>{const f=S.files.find(x=>x.id===v),k=$('#mm-item').value; Object.assign(f,{type:$('#mm-type').value,ent:$('#mm-ent').value,assign:k||null,unmatched:false,review:false,manual:true}); if(k) S.items[k]={status:'received'}; S.modal=null; return toast(k?'Matched — ready to verify':'Kept on file');},
   ignoreFile:v=>{Object.assign(S.files.find(x=>x.id===v),{unmatched:false,review:false,ent:'hh',manual:true,type:'unknown'}); S.modal=null; return toast('Marked not relevant');},
@@ -1900,7 +1900,7 @@ const A = {
   resolve:id=>{const d=discFor(id),ch=document.querySelector(`input[name="opt-${id}"]:checked`); d.chosen=ch?ch.value:'a'; d.status='resolved';
     if(id==='D2'&&d.chosen==='a'){['credit','legal'].forEach(c=>{const n=S.oneoffs.length+1;S.oneoffs.push({key:`${c}|ONE-0${n}|p2`,cl:c,doc:'ONE-0'+n,n:'Marriage certificate (Lawson → Hart)',cat:'Identity & KYC',ent:'p2',by:'Customer',addedBy:'Issue: surname',ver:'Name linkage check'});}); return toast('Record updated · marriage certificate added to Credit and Legal');}
     return toast('Record and pre-filled forms updated');},
-  flagCust:id=>{const d=discFor(id); d.flag=!d.flag; return toast(d.flag?'Shown to the client in their portal':'Hidden from the client');},
+  flagCust:id=>{const d=discFor(id); d.flag=!d.flag; return toast(d.flag?'Shown to the customer in their portal':'Hidden from the customer');},
   toggleSrc:()=>{S.showSrc=!S.showSrc;}, autofill:()=>{S.formAnim=true;},
   scan:()=>{ if(S.scanning) return true; S.scanning=true; S.scanPct=0; S.vc='kas';
     const tick=()=>{S.scanPct+=14; if(S.scanPct>=100){S.scanning=false; if(!S.rescanned){S.rescanned=true; NEW_FILES.forEach(f=>S.files.unshift({...f})); S.vmode='scanned'; S.vfilter='all'; return toast('2 new documents found · Emily’s payslips matched to the ANZ checklist');} return toast('Scan complete · nothing new');} render(); setTimeout(tick,240);};
@@ -1914,7 +1914,7 @@ const A = {
   acceptRec:v=>{const r=S.recs.find(x=>x.id===v); r.status='Accepted'; const {area,prov,prod}=findProd(r.tpl); const id='x'+v;
     S.extraCl.push({id,area:area.id,prov:prov.id,prod:prod.id,title:`${prov.name.replace('Harbour Legal Partners','Harbour Legal')} · ${prod.name}`,purpose:r.detail,rec:v,stage:3,owner:area.team,ctx:v==='R3'?{parties:['p1'],payg:['p1'],securities:['a2'],repayment:'IO'}:v==='R10'?{parties:['p1'],life:['p1'],existing:['p1']}:{parties:['p1','p2']}}); r.cl=id;
     return toast('Accepted — a new document checklist has been created');},
-  declineRec:v=>{const r=S.recs.find(x=>x.id===v); r.status='Declined'; r.why='Declined in the client portal'; return toast('Declined — James has been notified');},
+  declineRec:v=>{const r=S.recs.find(x=>x.id===v); r.status='Declined'; r.why='Declined in the customer portal'; return toast('Declined — James has been notified');},
   custConfirm:v=>{S.modal=()=>custConfirmModal(v);}, doCustConfirm:()=>{S.modal=null; return toast('Sent to James — he’ll update your record');},
   pv:v=>{S.pv=v; S.modal=null; window.scrollTo(0,0);}, pdocs:v=>{S.pv='docs'; S.pcl=v; window.scrollTo(0,0);}, pcl:v=>{S.pcl=S.pcl===v?'none':v;},
   disconnect:()=>{S.drive=false; return toast('Google Drive disconnected');},
@@ -1958,7 +1958,7 @@ document.addEventListener('change',e=>{
   if (e.target.dataset && e.target.dataset.loginRole!==undefined){ S.loginRole=e.target.value; const d=$('#lg-desc'); if(d) d.textContent=VIEWS_LOGIN.find(v=>v[0]===e.target.value)[2]; return; }
   const k=e.target.dataset?.up; if(!k||!e.target.files.length) return;
   const file=e.target.files[0], [cl,doc,en]=k.split('|'), area=clById(cl).area;
-  S.files.unshift({id:'u'+Date.now(),folder:area==='tax'?'A&T':areaName(area),name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',mod:'Today',type:(META[doc]?.t||['unknown'])[0],ent:en,conf:100,assign:k,isNew:true,x:{'Uploaded':'Client portal','Saved to':'Vault (Google Drive)'}});
+  S.files.unshift({id:'u'+Date.now(),folder:area==='tax'?'A&T':areaName(area),name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',mod:'Today',type:(META[doc]?.t||['unknown'])[0],ent:en,conf:100,assign:k,isNew:true,x:{'Uploaded':'Customer portal','Saved to':'Vault (Google Drive)'}});
   S.items[k]={status:'received'}; delete S.requested[k]; toast('Uploaded — your adviser will check it');
 });
 document.addEventListener('input',e=>{ const ds=e.target.dataset||{}; if(ds.nc&&S.nc){S.nc.f[ds.nc]=e.target.value; return;} if(ds.ncl&&S.nc){const [l,i,k]=ds.ncl.split('.'); S.nc[l][+i][k]=e.target.value; return;} if(ds.crm===undefined) return; const q=e.target.value.toLowerCase(); document.querySelectorAll('[data-q]').forEach(r=>{r.hidden=!r.dataset.q.includes(q);}); });
