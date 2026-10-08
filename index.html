@@ -550,6 +550,39 @@ details.more[open] summary{border-bottom:1px solid var(--line)}
 .srckey span{display:inline-flex;align-items:center;gap:6px}
 .srckey b{font-size:10px;font-weight:700;padding:1px 5px;border-radius:4px;background:var(--fg);color:var(--bg)}
 .mlist .seg button{font-size:12.5px;padding-inline:9px}
+/* new customer · find in Drive */
+.ncf{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+.ncf-card{max-width:760px}
+.fgrid.ncf-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,180px)}
+.ncf-how{list-style:none;margin:0;padding:4px 0 0;display:flex;flex-direction:column;gap:16px}
+.ncf-how li{display:flex;gap:12px;align-items:flex-start}
+.ncf-how li>span:last-child{display:flex;flex-direction:column;gap:2px;font-size:13.5px}
+.ncf-how .sn{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--brand-soft);color:var(--brand-ink);flex:none}
+.ncf-ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--brand-soft);color:var(--brand-ink);flex:none}
+.ncf-ic .ico{width:20px;height:20px}
+.chk.run{color:var(--fg);font-weight:500}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--brand-line);border-top-color:var(--brand);animation:spin .8s linear infinite;flex:none;margin-top:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+.ncf-found{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;align-items:start}
+.tag.ok-tag{display:inline-flex;align-items:center;gap:4px;background:var(--ok-soft);color:var(--ok);white-space:normal}
+.tag.ok-tag .ico{width:12px;height:12px}
+.ncf-alt{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed var(--line-strong);border-radius:var(--r);font-size:13px;flex-wrap:wrap}
+.ncf-kv{grid-template-columns:110px minmax(0,1fr)}
+.ncf-file{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:13px}
+.ncf-file .tag{flex:none}
+.pdf.sm-pdf{width:28px;height:34px;font-size:8.5px}
+.fdoc{width:28px;height:34px;border-radius:6px;background:var(--sunk);color:var(--muted);display:grid;place-items:center;flex:none}
+.fdoc .ico{width:15px;height:15px}
+.ffchip{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:700;padding:1px 5px;border-radius:4px;background:var(--brand-soft);color:var(--brand-ink);letter-spacing:.02em;vertical-align:1px}
+.ffchip.miss{background:var(--warn-soft);color:var(--warn);font-weight:600}
+.in.pre{background:var(--brand-soft);border-color:var(--brand-line)}
+.in.miss{background:var(--warn-soft);border-color:var(--warn-line)}
+.ffbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--brand-line);background:var(--brand-soft);border-radius:var(--r-lg);font-size:13.5px}
+.ffleg{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.ffleg .ffchip{margin-left:0}
+@media (max-width:1100px){.ncf,.ncf-found{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.fgrid.ncf-grid{grid-template-columns:minmax(0,1fr)}}
 /* paper form */
 .paper-wrap{background:var(--sunk);border-radius:14px;padding:24px;overflow-x:auto}
 .paper{background:var(--paper);color:var(--paper-ink);width:800px;margin:0 auto;box-shadow:0 2px 14px rgba(0,0,0,.16);padding:36px 40px 40px;font-size:11.5px;position:relative;font-family:var(--font)}
@@ -1189,7 +1222,7 @@ function render(){
   if (S.role!=='admin' && S.view==='config') S.view = S.role==='adviser'?'dash':'clients';
   if (S.role==='team' && ['dash','sessions','newclient'].includes(S.view)) S.view='clients';
   if (S.role==='admin' && ['clients','client','dash','sessions','newclient'].includes(S.view)) S.view='config';
-  if (S.view==='newclient' && !S.nc) S.nc=ncNew();
+  if (S.view==='newclient' && !S.nc) S.nc=ncStart();
   $('#app').innerHTML = `<div class="shell ${S.mnav?'mnav-open':''}">${S.mnav?'<div class="mscrim" data-act="mnav"></div>':''}${sidebar()}<div class="mainwrap">${topbar()}<main class="main">${VIEWS[S.view]()}</main></div></div>`
     + overlay() + (S.toast?`<div class="toast" role="status">${esc(S.toast)}</div>`:'');
   if (S.formAnim){ S.formAnim=false; animateForm(); }
@@ -1343,7 +1376,7 @@ TABS.issues = () => `<div class="stack" style="gap:16px">
 
 /* ---------- Application form ---------- */
 TABS.application = () => formView(false);
-const SRC={FF:'Fact find — entered by the adviser at discovery',PP:'Passport — scanned from the Vault',DL:'Driver licence — scanned from the Vault',PS:'Payslip — scanned from the Vault',BS:'Bank statement — scanned from the Vault',LS:'Loan statement — scanned from the Vault',LI:'Loan interest statement — scanned from the Vault',TS:'Title search — ordered by the adviser',IC:'Insurance certificate of currency',AS:'Managing agent statement',SS:'Super member statement',ST:'Strategy pack — accepted recommendation',CALC:'Calculated by Othello',SYS:'Othello system data'};
+const SRC={FF:'Fact find — completed at discovery, read from the customer’s Drive folder',REC:'Customer record — current details held in Othello',PP:'Passport — scanned from the Vault',DL:'Driver licence — scanned from the Vault',PS:'Payslip — scanned from the Vault',BS:'Bank statement — scanned from the Vault',LS:'Loan statement — scanned from the Vault',LI:'Loan interest statement — scanned from the Vault',TS:'Title search — ordered by the adviser',IC:'Insurance certificate of currency',AS:'Managing agent statement',SS:'Super member statement',ST:'Strategy pack — accepted recommendation',CALC:'Calculated by Othello',SYS:'Othello system data'};
 function formView(customer,tpl){
   const v=V(), dOpen=id=>discFor(id).status==='open';
   const p2pay=S.files.some(f=>f.id==='f32'); const insRej=itemStatus({key:'credit|RHL-INS-001|a1',by:'Customer'})==='rejected';
@@ -1513,7 +1546,7 @@ FORMS.res = {kicker:'RESIDENTIAL LENDING',title:'Home Loan Application',who:'Len
  {h:'8. Living expenses',f:[['Declared expenses','BS'],['HEM benchmark','SYS'],['Used for servicing','CALC',2]]}],
  decl:'Signatures are captured outside Othello.'};
 
-const SRC_TYPES = ['Customer record','Supporting document','Strategy pack','Calculated','Othello system','Manual entry'];
+const SRC_TYPES = ['Fact find','Customer record','Supporting document','Strategy pack','Calculated','Othello system','Manual entry'];
 const CUST_FIELDS = {
  'Primary applicant':['Title','First name','Last name','Other names','Date of birth','Email','Mobile','Residential address','At address since','Previous address','Marital status','Residency','Employment type','Employer','Occupation','Start date','Annual income','Private practice income','Specialty','AHPRA registration'],
  'Secondary applicant':['Title','First name','Last name','Other names','Date of birth','Email','Mobile','Residential address','Relationship to primary','Employment type','Employer','Occupation','Start date','Annual income'],
@@ -1523,9 +1556,11 @@ const CUST_FIELDS = {
  'Entities':['Name','Type','ABN / ACN','Applicant role'],
  'Product application':['Product','Provider','Amount','Term','Purpose','Repayment type','Quote rate','Cover amount']
 };
+const FF_FIELDS = Object.fromEntries([...Object.entries(CUST_FIELDS).filter(([g])=>g!=='Product application'),['Tax',['Tax customer','GST registered','Previous accountant']],['Advice needs',['Areas of advice','Existing personal insurance','Existing will','Goals']]]);
+const FF_PREF = ['Use the customer record','Use the fact find answer','Flag for review'];
 const STRAT_FIELDS = ['Product','Provider','Amount','Term','Purpose','Repayment type','Interest type','Offset','Cover amount','Waiting period','Benefit period','Ownership'];
 const FORMATS = ['As captured','UPPERCASE','DD/MM/YYYY','MM/YYYY','$ currency','Percentage','Yes / No','Masked (last 3 digits)'];
-const DOC_SRCS = Object.keys(SRC).filter(k=>!['FF','ST','CALC','SYS','APL'].includes(k));
+const DOC_SRCS = Object.keys(SRC).filter(k=>!['FF','REC','ST','CALC','SYS','APL'].includes(k));
 function guessCust(label,sec){
   const who = /Applicant 2|secondary|^A2 /i.test(sec+' '+label) ? 'Secondary applicant' : 'Primary applicant';
   const L=label.toLowerCase(); const pick=f=>`${who} › ${f}`;
@@ -1541,7 +1576,7 @@ function guessCust(label,sec){
   return pick('Occupation');
 }
 function defMapping(label,src,sec){
-  if (src==='FF') return {type:'Customer record',field:guessCust(label,sec),fmt:/birth|date/i.test(label)?'DD/MM/YYYY':/salary|income|value|amount|price/i.test(label)?'$ currency':'As captured'};
+  if (src==='FF') return {type:/mobile|email|address|phone/i.test(label)?'Customer record':'Fact find',pref:'Use the customer record',field:guessCust(label,sec),fmt:/birth|date/i.test(label)?'DD/MM/YYYY':/salary|income|value|amount|price/i.test(label)?'$ currency':'As captured'};
   if (src==='ST') return {type:'Strategy pack',field:STRAT_FIELDS.find(f=>label.toLowerCase().includes(f.toLowerCase().split(' ')[0]))||'Product',fmt:/amount/i.test(label)?'$ currency':'As captured'};
   if (src==='CALC') return {type:'Calculated',field:/lvr/i.test(label)?'Loan amount ÷ security value':'Higher of declared expenses and HEM',fmt:/lvr/i.test(label)?'Percentage':'$ currency'};
   if (src==='SYS'||src==='APL') return {type:'Othello system',field:label,fmt:'As captured'};
@@ -1559,9 +1594,9 @@ function mapState(prodId){
   S.map[prodId]={fam,fields,sel:fields.find(f=>f.status==='unmapped')?.key||fields[0].key,filter:'all',q:''};
   return S.map[prodId];
 }
-const mapLabel = m => !m||!m.type ? 'Not mapped' : m.type==='Supporting document' ? `${(SRC[m.doc]||m.doc).split(' — ')[0]} › ${m.dfield}` : m.type==='Manual entry' ? 'Entered at review' : m.type==='Calculated' ? `= ${m.field}` : m.field;
-const mapShort = m => !m||!m.type ? 'Not mapped' : m.type==='Customer record' ? String(m.field).replace(/^Primary applicant › /,'A1 · ').replace(/^Secondary applicant › /,'A2 · ') : m.type==='Supporting document' ? (m.dfield||'') : mapLabel(m);
-const mapCode = f => f.m.type==='Supporting document'?f.m.doc:f.m.type==='Customer record'?'FF':f.m.type==='Strategy pack'?'ST':f.m.type==='Calculated'?'CALC':f.m.type==='Othello system'?'SYS':f.m.type==='Manual entry'?'MAN':'?';
+const mapLabel = m => !m||!m.type ? 'Not mapped' : m.type==='Supporting document' ? `${(SRC[m.doc]||m.doc).split(' — ')[0]} › ${m.dfield}` : m.type==='Manual entry' ? 'Entered at review' : m.type==='Calculated' ? `= ${m.field}` : m.type==='Fact find' ? `Fact find › ${String(m.field||'').replace(/^Primary applicant › /,'A1 · ').replace(/^Secondary applicant › /,'A2 · ')}` : m.field;
+const mapShort = m => !m||!m.type ? 'Not mapped' : ['Customer record','Fact find'].includes(m.type) ? String(m.field).replace(/^Primary applicant › /,'A1 · ').replace(/^Secondary applicant › /,'A2 · ') : m.type==='Supporting document' ? (m.dfield||'') : mapLabel(m);
+const mapCode = f => f.m.type==='Supporting document'?f.m.doc:f.m.type==='Fact find'?'FF':f.m.type==='Customer record'?'REC':f.m.type==='Strategy pack'?'ST':f.m.type==='Calculated'?'CALC':f.m.type==='Othello system'?'SYS':f.m.type==='Manual entry'?'MAN':'?';
 
 VIEWS.mapping = () => {
   const {area,prov,prod}=findProd(S.cfg.prod); const st=mapState(prod.id); const d=formDef(st.fam,prod);
@@ -1576,11 +1611,15 @@ VIEWS.mapping = () => {
   const shown = F.filter(f=>(st.filter==='all'||f.status===st.filter)&&(!st.q||(f.label+' '+mapLabel(f.m)).toLowerCase().includes(st.q)));
   const groups=[...new Set(shown.map(f=>f.sec))];
   const m=sel.m||{};
+  const ffOpts = Object.entries(FF_FIELDS).map(([g,fs])=>`<optgroup label="${g}">${fs.map(x=>`<option ${m.field===g+' › '+x?'selected':''}>${g} › ${x}</option>`).join('')}</optgroup>`).join('');
   const custOpts = Object.entries(CUST_FIELDS).map(([g,fs])=>`<optgroup label="${g}">${fs.map(x=>`<option ${m.field===g+' › '+x?'selected':''}>${g} › ${x}</option>`).join('')}</optgroup>`).join('');
   const editor = `<div class="panel sec medit" style="gap:12px">
     <div class="row" style="gap:8px"><span class="eyebrow">${esc(sel.sec.replace(/^\d+\. /,''))}</span><span class="grow"></span>${sel.status==='mapped'?'<span class="pill p-ok">Mapped</span>':sel.status==='suggested'?'<span class="pill p-acc">Suggested</span>':'<span class="pill p-warn">Needs mapping</span>'}</div>
     <h2 style="font-size:17px">${esc(sel.label)}</h2>
     <div class="field"><label for="mp-type">Value comes from</label><select class="in" id="mp-type" data-mp="type"><option value="" ${!m.type?'selected':''}>Choose a source…</option>${SRC_TYPES.map(t=>`<option ${m.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+    ${m.type==='Fact find'?`<div class="field"><label for="mp-field">Fact find question</label><select class="in" id="mp-field">${ffOpts}</select></div>
+      <div class="field"><label for="mp-pref">If the customer record has changed since</label><select class="in" id="mp-pref">${FF_PREF.map(x=>`<option ${m.pref===x?'selected':''}>${x}</option>`).join('')}</select></div>
+      <div class="msg info">${I('info')}<span>Read from the fact find in the customer’s Drive folder, completed at discovery.</span></div>`:''}
     ${m.type==='Customer record'?`<div class="field"><label for="mp-field">Customer record field</label><select class="in" id="mp-field">${custOpts}</select></div>`:''}
     ${m.type==='Supporting document'?`<div class="field"><label for="mp-doc">Supporting document</label><select class="in" id="mp-doc">${DOC_SRCS.map(k=>`<option value="${k}" ${m.doc===k?'selected':''}>${SRC[k]}</option>`).join('')}</select></div>
       <div class="field"><label for="mp-dfield">Field read from the document</label><input class="in" id="mp-dfield" value="${esc(m.dfield||'')}"></div>
@@ -1608,7 +1647,7 @@ VIEWS.mapping = () => {
       <div class="paper-wrap mwrap">${paper}</div>
       <div class="stack mside" style="gap:14px">${editor}${list}</div>
     </div>
-    <div class="srckey">${['FF','ST','CALC','SYS','MAN'].map(k=>`<span><b>${k}</b>${k==='MAN'?'Manual entry':(SRC[k]||'').split(' — ')[0]}</span>`).join('')}<span><b>PP</b>…<b>AH</b> Supporting document codes</span><span><b>AI</b>Suggested by auto-map</span></div>
+    <div class="srckey">${['FF','REC','ST','CALC','SYS','MAN'].map(k=>`<span><b>${k}</b>${k==='MAN'?'Manual entry':(SRC[k]||'').split(' — ')[0]}</span>`).join('')}<span><b>PP</b>…<b>AH</b> Supporting document codes</span><span><b>AI</b>Suggested by auto-map</span></div>
   </div>`;
 };
 
@@ -1754,10 +1793,13 @@ function ncNew(pf={}){
     areas:{credit:true,tax:true,smsf:false,insurance:true,legal:false}, notes:{}, from:pf.first?`${pf.title||''} ${pf.first} ${pf.last}`.trim():''};
 }
 const fv = k => esc(S.nc.f[k]??'');
-const inp = (k,l,o={}) => `<div class="field ${o.w?'w2':''}"><label for="nc-${k}">${l}</label><input class="in" id="nc-${k}" data-nc="${k}" value="${fv(k)}" ${o.type?`type="${o.type}"`:''} placeholder="${o.ph||''}"></div>`;
-const sel = (k,l,opts,o={}) => `<div class="field ${o.w?'w2':''}"><label for="nc-${k}">${l}</label><select class="in" id="nc-${k}" data-nc="${k}">${opts.map(x=>`<option ${S.nc.f[k]===x?'selected':''}>${x}</option>`).join('')}</select></div>`;
-const lin = (list,i,k,l,o={}) => `<div class="field"><label>${l}</label><input class="in" data-ncl="${list}.${i}.${k}" value="${esc(S.nc[list][i][k]??'')}" placeholder="${o.ph||''}" ${o.type?`type="${o.type}"`:''}></div>`;
-const lsel = (list,i,k,l,opts) => `<div class="field"><label>${l}</label><select class="in" data-ncl="${list}.${i}.${k}">${opts.map(x=>`<option ${S.nc[list][i][k]===x?'selected':''}>${x}</option>`).join('')}</select></div>`;
+const ffc = k => !S.nc.ff ? '' : S.nc.pre[k] ? 'pre' : S.nc.miss[k] ? 'miss' : '';
+const ffl = k => !S.nc.ff ? '' : S.nc.pre[k] ? '<span class="ffchip" title="From the fact find">FF</span>' : S.nc.miss[k] ? '<span class="ffchip miss">Not in fact find</span>' : '';
+const inp = (k,l,o={}) => `<div class="field ${o.w?'w2':''}"><label for="nc-${k}">${l}${ffl(k)}</label><input class="in ${ffc(k)}" id="nc-${k}" data-nc="${k}" value="${fv(k)}" ${o.type?`type="${o.type}"`:''} placeholder="${o.ph||''}"></div>`;
+const sel = (k,l,opts,o={}) => `<div class="field ${o.w?'w2':''}"><label for="nc-${k}">${l}${ffl(k)}</label><select class="in ${ffc(k)}" id="nc-${k}" data-nc="${k}">${opts.map(x=>`<option ${S.nc.f[k]===x?'selected':''}>${x}</option>`).join('')}</select></div>`;
+const ffr = (list,i) => S.nc.ff && i<(S.nc.preRows[list]||0) ? 'pre' : '';
+const lin = (list,i,k,l,o={}) => `<div class="field"><label>${l}</label><input class="in ${ffr(list,i)}" data-ncl="${list}.${i}.${k}" value="${esc(S.nc[list][i][k]??'')}" placeholder="${o.ph||''}" ${o.type?`type="${o.type}"`:''}></div>`;
+const lsel = (list,i,k,l,opts) => `<div class="field"><label>${l}</label><select class="in ${ffr(list,i)}" data-ncl="${list}.${i}.${k}">${opts.map(x=>`<option ${S.nc[list][i][k]===x?'selected':''}>${x}</option>`).join('')}</select></div>`;
 const PROF=['Medical','Dental','Allied health','Other'], CAREER=['Doctor-in-training','Specialist','General practitioner','Established practitioner','Practice owner','Retiring'], EMP=['PAYG','Self-employed','PAYG + private practice','Not working'];
 function personForm(p,label){
   return `<div class="fgroup"><div class="fgroup-h"><b>${label}</b></div><div class="fgrid">
@@ -1774,8 +1816,103 @@ function workForm(p,label){
     ${inp(p+'.start','Started in current role',{type:'month'})}${inp(p+'.basis','Basis',{ph:'e.g. 0.8 FTE, sessional'})}
   </div></div>`;
 }
+/* ---------- New customer: find in Google Drive and pre-fill from the fact find ---------- */
+const FF_SCAN = ['Connecting to Google Drive · Othello / Clients','Searching 112 customer folders','Matching name and date of birth','Reading the fact find'];
+const fmtDob = d => { if(!d) return '—'; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
+function ffDemo(q){
+  const first=q.first.trim(), last=q.last.trim();
+  const f={'p1.title':'Dr','p1.first':first,'p1.last':last,'p1.dob':q.dob,'p1.marital':'Married','p1.email':`${first}.${last}`.toLowerCase().replace(/[^a-z.]/g,'')+'@example.com','p1.mobile':'0400 555 218',
+    'p1.addr':'14 Wattle Grove, Kew VIC 3101','p1.since':'2019-03','p1.prof':'Medical','p1.spec':'Anaesthesia','p1.stage':'Specialist','p1.ahpra':'MED0009876543','p1.emp':'PAYG + private practice',
+    'p1.employer':'Eastern Metro Health · '+last+' Anaesthesia Pty Ltd','p1.income':'$285,000','p1.priv':'$210,000','p1.start':'2018-02','p1.basis':'0.6 FTE public + private lists',
+    'p2.title':'Dr','p2.first':'Grace','p2.last':last,'p2.dob':'1986-11-03','p2.rel':'Spouse','p2.email':`grace.${last}`.toLowerCase().replace(/[^a-z.]/g,'')+'@example.com','p2.mobile':'0400 555 731',
+    'p2.prof':'Medical','p2.spec':'General practice','p2.stage':'General practitioner','p2.emp':'PAYG','p2.employer':'Kew Family Medical','p2.income':'$165,000','p2.start':'2021-07','p2.basis':'0.8 FTE',
+    'tax.status':'New customer','tax.gst':'No','cover':'Yes – held in super','will':'Yes – over 5 years old','goals':'Upgrade the family home, set up the private practice structure properly, review income protection'};
+  return {f, sec:true,
+    deps:[{name:'Isla',dob:'2017-04-22',rel:'Daughter',lives:'Yes'},{name:'Noah',dob:'2020-09-15',rel:'Son',lives:'Yes'}],
+    assets:[{type:'Home (owner-occupied)',desc:'14 Wattle Grove, Kew',owner:'Joint',value:'$2,150,000'},{type:'Savings / term deposit',desc:'Offset account',owner:'Joint',value:'$145,000'},{type:'Superannuation',desc:first+' – industry fund',owner:'Primary',value:'$410,000'},{type:'Superannuation',desc:'Grace – industry fund',owner:'Secondary',value:'$265,000'}],
+    liabs:[{type:'Home loan',lender:'ANZ',owner:'Joint',bal:'$980,000'},{type:'Credit card',lender:'ANZ',owner:'Joint',bal:'$8,000'}],
+    ents:[{type:'Company',name:last+' Anaesthesia Pty Ltd',abn:'48 612 330 917',role:'Director'},{type:'Family trust',name:last+' Family Trust',abn:'—',role:'Trustee'}],
+    areas:{credit:true,tax:true,smsf:false,insurance:true,legal:true},
+    miss:{'p2.ahpra':1,'p2.addr':0,'tax.prev':1,'p2.other':0}};
+}
+function ffFolder(q){ const first=q.first.trim(), last=q.last.trim();
+  return {name:`${last}, ${first} & Grace`, path:`Othello / Clients / ${last}, ${first} & Grace`, doc:`Fact Find – ${last} – Sep 2026.pdf`,
+    files:[[`Fact Find – ${last} – Sep 2026.pdf`,'14 pages · 18 Sep 2026','Fact find'],[`Passport – ${first}.pdf`,'2 pages · 2 Aug 2026','Passport'],['Driver licence – Grace.jpg','1.2 MB · 2 Aug 2026','Driver licence'],['Payslip Aug 2026 – Grace.pdf','1 page · 31 Aug 2026','Payslip'],['ANZ home loan statement Jun 2026.pdf','3 pages · 4 Jul 2026','Loan statement'],[`Insurance schedule – ${first} (in super).pdf`,'4 pages · 12 Mar 2026','Policy schedule'],['Will – 2019.pdf','9 pages · 6 May 2019','Existing will']]};
+}
+function ncFindView(){
+  const n=S.nc, q=n.q;
+  const intro = `<div class="head"><div class="stack" style="gap:4px"><h1>New customer</h1><span class="sub">Enter who you’re meeting. Othello finds their folder in Google Drive and pre-fills the fact find for you.</span></div></div>`;
+  if (n.phase==='start') return `<div class="stack">${intro}
+    <div class="ncf">
+      <form class="panel sec ncf-card" id="ncfind" style="gap:16px;padding:24px" novalidate>
+        <div class="fgrid ncf-grid">
+          <div class="field"><label for="nq-first">First name</label><input class="in" id="nq-first" data-ncq="first" value="${esc(q.first)}" autocomplete="off" placeholder="e.g. Thomas"></div>
+          <div class="field"><label for="nq-last">Surname</label><input class="in" id="nq-last" data-ncq="last" value="${esc(q.last)}" autocomplete="off" placeholder="e.g. Bennett"></div>
+          <div class="field"><label for="nq-dob">Date of birth</label><input class="in" id="nq-dob" data-ncq="dob" type="date" value="${esc(q.dob)}"></div>
+        </div>
+        ${n.err?`<div class="msg warn">${I('alert')}<span>${n.err}</span></div>`:''}
+        <div class="row"><button type="button" class="btn ghost sm" data-act="ncDemo">Use the demo customer</button><span class="grow"></span><button class="btn primary" type="submit">${I('search')}Find in Google Drive</button></div>
+      </form>
+      <ol class="ncf-how">
+        <li><span class="sn">1</span><span><b>Enter the customer</b><span class="small">First name, surname and date of birth.</span></span></li>
+        <li><span class="sn">2</span><span><b>Othello searches Drive</b><span class="small">Matches the customer folder in Othello / Clients and finds the fact find.</span></span></li>
+        <li><span class="sn">3</span><span><b>Review and create</b><span class="small">Check the pre-filled fact find, fill any gaps and create the customer.</span></span></li>
+      </ol>
+    </div></div>`;
+  const fo=ffFolder(q);
+  if (n.phase==='search') return `<div class="stack">${intro}
+    <div class="panel sec ncf-card" style="gap:14px;padding:24px" aria-live="polite">
+      <div class="row" style="gap:12px"><span class="ncf-ic">${I('vault')}</span><div><b>Looking for ${esc(q.first)} ${esc(q.last)}</b><div class="small">Date of birth ${fmtDob(q.dob)}</div></div></div>
+      <div class="stack" style="gap:10px">${FF_SCAN.map((s,i)=>`<div class="chk ${i<n.scan?'ok':i===n.scan?'run':'wait'}">${i<n.scan?I('check'):i===n.scan?'<span class="spin" aria-hidden="true"></span>':I('clock')}<span>${s}${i===1&&n.scan>1?' · 2 possible matches':''}${i===2&&n.scan>2?` · <b>${esc(fo.name)}</b>`:''}</span></div>`).join('')}</div>
+      <div class="mprog"><div class="bar"><span class="v" style="width:${Math.min(100,n.scan/FF_SCAN.length*100)}%;transition:width .5s"></span></div></div>
+    </div></div>`;
+  // found
+  const d=ffDemo(q), f=d.f;
+  const filled=Object.keys(f).length + d.deps.length*4 + d.assets.length*4 + d.liabs.length*4 + d.ents.length*4;
+  const missN=Object.values(d.miss).filter(Boolean).length;
+  return `<div class="stack">${intro}
+    <div class="ncf-found">
+      <div class="stack" style="gap:16px;min-width:0">
+        <section class="panel sec" style="gap:14px">
+          <div class="row" style="gap:8px"><span class="eyebrow">Customer folder found</span><span class="grow"></span><span class="pill p-ok">96% match</span></div>
+          <div class="row" style="gap:12px;flex-wrap:nowrap"><span class="ncf-ic">${I('vault')}</span><div style="min-width:0"><b style="font-size:16px">${esc(fo.name)}</b><div class="small mono" style="overflow-wrap:anywhere">${esc(fo.path)}</div></div></div>
+          <div class="row" style="gap:6px">${['Surname matches','First name matches','Date of birth matches the fact find'].map(t=>`<span class="tag ok-tag">${I('check')}${t}</span>`).join('')}</div>
+          <div class="ncf-alt"><span class="fold"></span><span style="flex:1;min-width:0"><b>${esc(q.last.replace(/t$/,''))} Dental Pty Ltd</b><span class="small"> · 58% · surname only, no date of birth</span></span><button class="btn ghost sm" data-act="toast" data-v="That folder has no fact find — keeping the 96% match">Use this instead</button></div>
+        </section>
+        <section class="panel sec" style="gap:12px">
+          <div class="h"><h2>Fact find</h2><span class="small">Completed 18 Sep 2026 · James Okafor</span></div>
+          <div class="file"><span class="pdf">PDF</span><div style="flex:1;min-width:0"><b style="overflow-wrap:anywhere">${esc(fo.doc)}</b><div class="small">14 pages · read by Othello · ${filled} answers found</div></div></div>
+          <dl class="kv ncf-kv">
+            <dt>Primary</dt><dd>Dr ${esc(f['p1.first'])} ${esc(f['p1.last'])} · ${fmtDob(f['p1.dob'])} · ${esc(f['p1.spec'])}</dd>
+            <dt>Secondary</dt><dd>Dr ${esc(f['p2.first'])} ${esc(f['p2.last'])} · ${esc(f['p2.spec'])}</dd>
+            <dt>Dependants</dt><dd>${d.deps.map(x=>`${x.name} (${x.dob.slice(0,4)})`).join(', ')}</dd>
+            <dt>Income</dt><dd>${esc(f['p1.first'])}: ${esc(f['p1.emp'])} · Grace: ${esc(f['p2.emp'])}</dd>
+            <dt>Position</dt><dd>${d.assets.length} assets · ${d.liabs.length} liabilities · ${d.ents.length} entities</dd>
+            <dt>Advice areas</dt><dd><span class="row" style="gap:4px">${AREAS.filter(a=>d.areas[a.id]).map(a=>tile(a.id,'sm')).join('')}</span></dd>
+          </dl>
+          <div class="msg warn">${I('info')}<span>${missN} answers aren’t in the fact find: Grace’s AHPRA number and the previous accountant. You can fill them in on the next screen.</span></div>
+        </section>
+      </div>
+      <section class="panel sec" style="gap:10px;align-self:start">
+        <div class="h"><h2>Also in this folder</h2><span class="small">${fo.files.length} files</span></div>
+        <span class="small">Scanned into the Vault and matched to checklists once the customer is created.</span>
+        <div class="stack" style="gap:0">${fo.files.map(([nm,meta,t],i)=>`<div class="ncf-file"><span class="${i===0?'pdf sm-pdf':'fdoc'}">${i===0?'PDF':I('file')}</span><span style="flex:1;min-width:0"><span style="display:block;font-weight:500;overflow-wrap:anywhere">${esc(nm)}</span><span class="small">${meta}</span></span><span class="tag">${t}</span></div>`).join('')}</div>
+      </section>
+    </div>
+    <div class="row"><button class="btn" data-act="ncRestart">Not the right customer</button><span class="grow"></span><button class="btn ghost" data-act="ncBlank">Start a blank fact find</button><button class="btn primary" data-act="ncPrefill">${I('check')}Pre-fill the fact find</button></div>
+  </div>`;
+}
+let ncTimer=null;
+function ncRunScan(){
+  clearInterval(ncTimer);
+  ncTimer=setInterval(()=>{ if(!S.nc||S.nc.phase!=='search'||S.view!=='newclient'){ clearInterval(ncTimer); return; }
+    S.nc.scan++; if(S.nc.scan>FF_SCAN.length){ clearInterval(ncTimer); S.nc.phase='found'; } render(); }, 700);
+}
+
+function ncStart(q){ return {phase:'start',q:q||{first:'',last:'',dob:''},scan:0}; }
 VIEWS.newclient = () => {
-  if (!S.nc) S.nc=ncNew();
+  if (!S.nc) S.nc=ncStart();
+  if (S.nc.phase && S.nc.phase!=='wizard') return ncFindView();
   const st=S.nc.step, n=S.nc, f=n.f;
   const stepper=`<div class="stepper">${NC_STEPS.map((s,i)=>`<button class="${i<st?'done':i===st?'cur':''}" data-act="ncGo" data-v="${i}"><span class="sn">${i<st?I('check'):i+1}</span><span>${s}</span></button>`).join('')}</div>`;
   let body='';
@@ -1811,15 +1948,17 @@ VIEWS.newclient = () => {
       <div class="panel sec" style="gap:10px"><h2>Summary</h2><dl class="kv"><dt>Primary</dt><dd>${esc(f['p1.title']||'')} ${esc(name)} · ${esc(f['p1.spec']||f['p1.prof'])}</dd>${n.sec?`<dt>Secondary</dt><dd>${esc(f['p2.title']||'')} ${esc([f['p2.first'],f['p2.last']].filter(Boolean).join(' ')||'—')} · ${esc(f['p2.rel'])}</dd>`:''}<dt>Dependants</dt><dd>${n.deps.filter(d=>d.name).map(d=>esc(d.name)).join(', ')||'None'}</dd><dt>Assets</dt><dd>${n.assets.length} · Liabilities ${n.liabs.length} · Entities ${n.ents.length}</dd><dt>Areas</dt><dd><span class="row" style="gap:4px">${AREAS.filter(a=>n.areas[a.id]).map(a=>tile(a.id,'sm')).join('')||'None selected'}</span></dd></dl></div>
       <div class="panel sec" style="gap:10px"><h2>What happens when you create this customer</h2>
         <div class="chk ok">${I('check')}<span>Customer record added to Customers at the <b>Discovery</b> stage, adviser James Okafor</span></div>
-        <div class="chk ok">${I('check')}<span>Vault folder created: <span class="mono">Othello / Clients / ${esc(name)}</span> with the 8 standard folders</span></div>
+        ${n.ff?`<div class="chk ok">${I('check')}<span>Vault folder linked: <span class="mono">${esc(n.ff.path)}</span> — ${n.ff.files.length} files scanned and matched to checklists</span></div>
+        <div class="chk ok">${I('check')}<span>Fact find kept in the Vault as the source document behind this customer record</span></div>`:`<div class="chk ok">${I('check')}<span>Vault folder created: <span class="mono">Othello / Clients / ${esc(name)}</span> with the 8 standard folders</span></div>`}
         <div class="chk ok">${I('check')}<span>Details from this fact find pre-fill every future application form</span></div>
         <div class="sect-t" style="margin-top:6px">Documents these answers will trigger</div>
         ${trig.map(t=>`<div class="chk wait">${I('file')}<span>${t}</span></div>`).join('')||'<span class="small">Standard identity and consent documents only</span>'}
       </div></div>`;
   }
   return `<div class="stack">
-    <div class="head"><div class="stack" style="gap:4px"><h1>${n.from?'Fact find — '+esc(n.from):'New customer — fact find'}</h1><span class="sub">Capture the household during discovery. Everything here becomes the customer record and drives each document checklist.</span></div>
+    <div class="head"><div class="stack" style="gap:4px"><h1>${n.from?'Fact find — '+esc(n.from):'New customer — fact find'}</h1><span class="sub">${n.ff?`Pre-filled from the fact find in <b>${esc(n.ff.path)}</b>. Check each answer and fill anything highlighted.`:'Capture the household during discovery. Everything here becomes the customer record and drives each document checklist.'}</span></div>
       <span class="small">Draft saved just now</span></div>
+    ${n.ff?`<div class="ffbar"><span class="pdf sm-pdf">PDF</span><span style="flex:1;min-width:0"><b style="overflow-wrap:anywhere">${esc(n.ff.doc)}</b><span class="small"> · ${Object.keys(n.pre).length+Object.values(n.preRows).reduce((x,y)=>x+y,0)} answers pre-filled · ${Object.values(n.miss).filter(Boolean).length} to complete</span></span><span class="ffleg"><span class="ffchip">FF</span>From the fact find</span><span class="ffleg"><span class="ffchip miss">Not in fact find</span></span></div>`:''}
     ${stepper}
     <div class="panel sec" style="gap:18px;padding:22px">${body}</div>
     <div class="row"><button class="btn" data-act="ncBack" ${st===0?'disabled':''}>Back</button><span class="grow"></span><button class="btn ghost" data-act="toast" data-v="Draft saved — continue any time from Customers">Save draft</button>${st<NC_STEPS.length-1?`<button class="btn primary" data-act="ncNext">Continue</button>`:`<button class="btn primary" data-act="ncCreate">${I('check')}Create customer</button>`}</div>
@@ -2046,7 +2185,7 @@ const A = {
   mapNext:()=>{ const st=mapState(S.cfg.prod), F=st.fields, i=F.findIndex(f=>f.key===st.sel); const nx=[...F.slice(i+1),...F.slice(0,i)].find(f=>f.status!=='mapped')||F[(i+1)%F.length]; st.sel=nx.key; mapRender(true); return true; },
   mapSave:v=>{ const st=mapState(S.cfg.prod), f=st.fields.find(x=>x.key===v), val=id=>{const e=$(id); return e?e.value:undefined;};
     const m={type:val('#mp-type'),fmt:val('#mp-fmt')||'As captured'}; if(f.m.repeat) m.repeat=true;
-    if(m.type==='Supporting document'){ m.doc=val('#mp-doc'); m.dfield=val('#mp-dfield'); m.fallback=val('#mp-fb'); } else if(m.type!=='Manual entry') m.field=val('#mp-field');
+    if(m.type==='Fact find') m.pref=val('#mp-pref'); if(m.type==='Supporting document'){ m.doc=val('#mp-doc'); m.dfield=val('#mp-dfield'); m.fallback=val('#mp-fb'); } else if(m.type!=='Manual entry') m.field=val('#mp-field');
     if(!m.type) return; f.m=m; const r=$('#mp-req'); if(r) f.req=r.checked; f.status='mapped'; st.pub=st.pub&&null;
     const left=st.fields.filter(x=>x.status!=='mapped').length; toast(left?`Saved · ${left} field${left>1?'s':''} left`:'All fields mapped — ready to publish'); if(left) return A.mapNext(); },
   mapFilter:v=>{ mapState(S.cfg.prod).filter=v; },
@@ -2100,7 +2239,13 @@ const A = {
   disconnect:()=>{S.drive=false; return toast('Google Drive disconnected');},
   scrollRec:()=>{const el=document.getElementById('recs'); if(el) el.scrollIntoView({behavior:'smooth'}); return true;},
   tplView:v=>{S.drawer=null; S.wide=true; S.modal=()=>tplModal(v);},
-  newClient:()=>{S.nc=ncNew(); S.view='newclient'; window.scrollTo(0,0);},
+  newClient:()=>{S.nc=ncStart(); S.view='newclient'; window.scrollTo(0,0);},
+  ncDemo:()=>{S.nc.q={first:'Thomas',last:'Bennett',dob:'1984-06-12'}; S.nc.err='';},
+  ncRestart:()=>{S.nc=ncStart({...S.nc.q}); window.scrollTo(0,0);},
+  ncBlank:()=>{const q=S.nc.q; S.nc=ncNew({first:q.first,last:q.last}); S.nc.f['p1.dob']=q.dob; S.nc.from=''; window.scrollTo(0,0);},
+  ncPrefill:()=>{const q=S.nc.q, d=ffDemo(q), n=ncNew(); Object.assign(n.f,d.f); Object.assign(n,{deps:d.deps,assets:d.assets,liabs:d.liabs,ents:d.ents,areas:d.areas,sec:true});
+    n.ff=ffFolder(q); n.pre=Object.fromEntries(Object.keys(d.f).map(k=>[k,1])); n.miss=Object.fromEntries(Object.entries(d.miss).filter(([,v])=>v)); n.preRows={deps:d.deps.length,assets:d.assets.length,liabs:d.liabs.length,ents:d.ents.length};
+    n.from=`Dr ${q.first.trim()} ${q.last.trim()}`; S.nc=n; window.scrollTo(0,0); toast(`Fact find pre-filled from ${n.ff.doc}`);},
   startDisc:v=>{const s=SESSIONS.find(x=>x.id===v); S.nc=ncNew(s.pf||{}); S.nc.cid=s.cid; S.view='newclient'; window.scrollTo(0,0);},
   ncGo:v=>{S.nc.step=+v; window.scrollTo(0,0);}, ncNext:()=>{S.nc.step=Math.min(S.nc.step+1,NC_STEPS.length-1); window.scrollTo(0,0);}, ncBack:()=>{S.nc.step=Math.max(0,S.nc.step-1); window.scrollTo(0,0);},
   ncSec:()=>{S.nc.sec=!S.nc.sec;}, ncArea:v=>{S.nc.areas[v]=!S.nc.areas[v];},
@@ -2109,12 +2254,13 @@ const A = {
   ncCreate:()=>{const f=S.nc.f, n=S.nc; const first=f['p1.first']||'New', last=f['p1.last']||'Client', t=f['p1.title']||'';
     const both=n.sec&&f['p2.first']; const name=both?`${t==='Dr'&&f['p2.title']==='Dr'?'Drs':t} ${first} & ${f['p2.first']} ${last}`:`${t} ${first} ${last}`;
     const areas=AREAS.filter(a=>n.areas[a.id]).map(a=>a.id); const ex=n.cid&&S.customers.find(c=>c.id===n.cid); const id=ex?ex.id:'n'+Date.now();
+    const drive=n.ff?n.ff.name:`${first} ${last}`;
     if (ex) Object.assign(ex,{drive:`${first} ${last}`,match:'exact',score:100,areas,prog:areas.map(()=>0),stage:Math.max(ex.stage,0)});
-    else S.customers.unshift({id,name:name.trim(),drive:`${first} ${last}`,match:'exact',score:100,stage:0,areas,adv:'James Okafor',prog:areas.map(()=>0)});
+    else S.customers.unshift({id,name:name.trim(),drive,match:'exact',score:100,stage:0,areas,adv:'James Okafor',prog:areas.map(()=>0)});
     const sess=SESSIONS.find(x=>x.cid===id&&x.type==='Discovery'); if(sess){sess.prep='Fact find completed'; sess.done=true;}
     CRM[id]={lead:`${t} ${first} ${last}`.trim(),prof:f['p1.spec']||f['p1.prof']||'—',email:f['p1.email']||'—',phone:f['p1.mobile']||'—',sub:(f['p1.addr']||'').split(',').slice(-1)[0].trim()||'—',since:ex?(CRM[id]?.since==='Prospect'?'Oct 2026':CRM[id]?.since||'Oct 2026'):'Oct 2026',last:'Just now · Fact find completed',next:'Write strategy notes'};
-    AREA_STAGE[id]=Object.fromEntries(areas.map(a=>[a,0])); S.nc=null; S.view='client'; S.cust=id; S.tab='profile'; window.scrollTo(0,0);
-    return toast(`${first} ${last} created · Vault folder Othello / Clients / ${first} ${last} set up`);},
+    AREA_STAGE[id]=Object.fromEntries(areas.map(a=>[a,0])); const nff=n.ff; S.nc=null; S.view='client'; S.cust=id; S.tab='profile'; window.scrollTo(0,0);
+    return toast(n.ff?`${first} ${last} created · linked to ${n.ff.path} · ${n.ff.files.length} files scanned`:`${first} ${last} created · Vault folder Othello / Clients / ${first} ${last} set up`);},
   crmStage:v=>{const [a,i]=v.split(':'); S.crmStage={a,i:+i}; S.crmArea='all'; S.view='clients'; window.scrollTo(0,0);}, crmClear:()=>{S.crmStage=null;}, crmArea2:v=>{S.crmStage=null; S.crmArea=v; S.view='clients'; window.scrollTo(0,0);},
   switchRole:v=>{S.menu=''; S.mnav=false; S.drawer=S.modal=null; S.role=v; S.view=v==='admin'?'config':v==='adviser'?'dash':'clients'; S.cfg.screen='home'; S.crmStage=null; try{sessionStorage.setItem('ov_auth',v);}catch(e){} window.scrollTo(0,0); return toast('Now viewing as '+VIEWS_LOGIN.find(x=>x[0]===v)[1]);},
   signout:v=>{try{sessionStorage.removeItem('ov_auth');}catch(e){} S.authed=false; S.menu=''; S.mnav=false; S.drawer=S.modal=null; S.loginErr=''; S.loginRole=S.role; if(v!=='switch') return toast('Signed out');},
@@ -2129,6 +2275,10 @@ document.addEventListener('click',e=>{
   const r=fn(t.dataset.v,t); if(r!==true && r!==undefined) return; if(r===true) return; render();
 });
 document.addEventListener('submit',e=>{
+  if (e.target.id==='ncfind'){ e.preventDefault(); const q=S.nc.q; ['first','last','dob'].forEach(k=>{const el=$('#nq-'+k); if(el) q[k]=el.value;});
+    const miss=[!q.first.trim()&&'first name',!q.last.trim()&&'surname',!q.dob&&'date of birth'].filter(Boolean);
+    if(miss.length){ S.nc.err=`Enter the ${miss.join(', ').replace(/, ([^,]*)$/,' and $1')} to search Drive.`; render(); const el=$('#nq-'+(!q.first.trim()?'first':!q.last.trim()?'last':'dob')); if(el) el.focus(); return; }
+    S.nc.err=''; S.nc.phase='search'; S.nc.scan=0; render(); ncRunScan(); return; }
   if (e.target.id!=='login') return; e.preventDefault();
   const role=$('#lg-role').value, pw=$('#lg-pw').value;
   if (pw==='Jupiter'){ try{sessionStorage.setItem('ov_auth',role);}catch(e){} S.authed=true; S.loginErr=''; S.role=role; S.view=role==='admin'?'config':role==='adviser'?'dash':'clients'; S.cfg.screen='home'; window.scrollTo(0,0); render(); }
@@ -2137,7 +2287,7 @@ document.addEventListener('submit',e=>{
 document.addEventListener('change',e=>{
   if (e.target.dataset && e.target.dataset.loginRole!==undefined){ S.loginRole=e.target.value; const d=$('#lg-desc'); if(d) d.textContent=VIEWS_LOGIN.find(v=>v[0]===e.target.value)[2]; return; }
   if (e.target.dataset && e.target.dataset.mp==='type'){ const st=mapState(S.cfg.prod), f=st.fields.find(x=>x.key===st.sel), t=e.target.value; const m={...f.m,type:t};
-    if(t==='Customer record'&&!/›/.test(m.field||'')) m.field=guessCust(f.label,f.sec);
+    if((t==='Customer record'||t==='Fact find')&&!/›/.test(m.field||'')) m.field=guessCust(f.label,f.sec); if(t==='Fact find'&&!m.pref) m.pref=FF_PREF[0];
     if(t==='Supporting document'){ m.doc=m.doc||(DOC_SRCS.includes(f.src)?f.src:'PP'); m.dfield=m.dfield||f.label.replace(/^A[12] /,'').replace(/^./,c=>c.toUpperCase()); m.fallback=m.fallback||'Customer record'; }
     if(t==='Strategy pack'&&!STRAT_FIELDS.includes(m.field)) m.field=STRAT_FIELDS[0];
     if(t==='Calculated'&&!(f.m.type==='Calculated')) m.field='';
@@ -2148,7 +2298,7 @@ document.addEventListener('change',e=>{
   S.files.unshift({id:'u'+Date.now(),folder:area==='tax'?'A&T':areaName(area),name:file.name,size:Math.max(1,Math.round(file.size/1024))+' KB',mod:'Today',type:(META[doc]?.t||['unknown'])[0],ent:en,conf:100,assign:k,isNew:true,x:{'Uploaded':'Customer portal','Saved to':'Vault (Google Drive)'}});
   S.items[k]={status:'received'}; delete S.requested[k]; toast('Uploaded — your adviser will check it');
 });
-document.addEventListener('input',e=>{ const ds=e.target.dataset||{}; if(ds.mapq!==undefined){ const q=e.target.value.toLowerCase(); mapState(S.cfg.prod).q=q; document.querySelectorAll('.mrow').forEach(r=>{r.hidden=!r.dataset.mq.includes(q);}); document.querySelectorAll('.mgrp').forEach(g=>{g.hidden=!g.querySelector('.mrow:not([hidden])');}); return; } if(ds.nc&&S.nc){S.nc.f[ds.nc]=e.target.value; return;} if(ds.ncl&&S.nc){const [l,i,k]=ds.ncl.split('.'); S.nc[l][+i][k]=e.target.value; return;} if(ds.crm===undefined) return; const q=e.target.value.toLowerCase(); document.querySelectorAll('[data-q]').forEach(r=>{r.hidden=!r.dataset.q.includes(q);}); });
+document.addEventListener('input',e=>{ const ds=e.target.dataset||{}; if(ds.mapq!==undefined){ const q=e.target.value.toLowerCase(); mapState(S.cfg.prod).q=q; document.querySelectorAll('.mrow').forEach(r=>{r.hidden=!r.dataset.mq.includes(q);}); document.querySelectorAll('.mgrp').forEach(g=>{g.hidden=!g.querySelector('.mrow:not([hidden])');}); return; } if(ds.ncq!==undefined&&S.nc&&S.nc.q){S.nc.q[ds.ncq]=e.target.value; return;} if(ds.nc&&S.nc){S.nc.f[ds.nc]=e.target.value; if(S.nc.ff){ const lab=e.target.parentElement.querySelector('.ffchip'); if(S.nc.pre[ds.nc]){ delete S.nc.pre[ds.nc]; e.target.classList.remove('pre'); if(lab) lab.remove(); } else if(S.nc.miss[ds.nc]&&e.target.value){ delete S.nc.miss[ds.nc]; e.target.classList.remove('miss'); if(lab) lab.remove(); } } return;} if(ds.ncl&&S.nc){const [l,i,k]=ds.ncl.split('.'); S.nc[l][+i][k]=e.target.value; return;} if(ds.crm===undefined) return; const q=e.target.value.toLowerCase(); document.querySelectorAll('[data-q]').forEach(r=>{r.hidden=!r.dataset.q.includes(q);}); });
 document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); const i=document.querySelector('[data-search]'); if(i) i.focus(); }
   if(e.key==='Escape'&&S.menu){S.menu=''; render(); return;} if(e.key==='Escape'&&(S.drawer||S.modal)){S.drawer=S.modal=null; S.wide=false; render();} });
 try{ const r=sessionStorage.getItem('ov_auth'); if(r&&VIEWS_LOGIN.some(v=>v[0]===r)){ S.authed=true; S.role=r; S.view=r==='admin'?'config':r==='adviser'?'dash':'clients'; } }catch(e){}
