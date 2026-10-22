@@ -11,12 +11,15 @@ Single-file HTML prototype of Othello Vault for Medcentric. Open `index.html` in
 - **How It Works** — the end-to-end workflow walkthrough for the project team
 
 ## First-Time Setup Simulation
-Start it from **Run First-Time Setup Simulation** on the sign-in screen (same password) or **Setup Simulation** in the nav. 23 steps:
-1. **Workspace setup (Administrator)** — teams and people (roles Administrator / Lead / Member, job titles), organisation and brand (logo, business details, contacts, regional settings), Google Drive (no customers added), 5 advice areas, providers and products, document requirements, upload the real ANZ PDF forms, map their fields, go live
-2. **Advisor (Lead)** — dashboard, find the customer in Drive (several folders match; the date of birth on the ID picks the right one), automatic scan and match, fix mismatches (hover any document to see the conflicting value), the customer record built from the Fact Find, Authority to Continue per area and the strategy pack's high-level recommendations, approve
-3. **Credit team (Member)** — dashboard and queue, product and loan details, **populate the ANZ forms** (each field written live into the real PDFs in the browser with pdf-lib, previewed with pdf.js, hover any field for its value and source, download), checklist with custom documents and send to the customer, new files detected and flagged, customer application view
+Start it from **Run First-Time Setup Simulation** on the sign-in screen (same password) or **Setup Simulation** in the nav. 27 steps across six groups:
+1. **Workspace setup (David Le, Administrator)** — teams and people (multi-select team membership), organisation and brand (Medcentric logo), the centralised Medcentric Clients shared drive (personal folders excluded), advice areas, providers and products with their PDF forms (Westpac, Macquarie, Acenda, HUB24, Macquarie CMA), document requirements picked from the Standard Document List (clients request new types rather than adding them), field mapping (Customer record, Fact Find, a supporting document and its field, and more), go live
+2. **Advisor (Mina Andrawis)** — dashboard, find the customer in Drive, scan and match, fix mismatches (including income: Fact Find against the ATO income statement), the customer record (as-of date and source on every attribute, a timestamped change log, and a future-scope timeline with Record a Change in Position), approve
+3. **Credit team** — product and loan details (customer-specific document types), **Forms & Checklist**: the checklist is built from the files found in Drive, the Westpac and Macquarie forms fill live in the browser, fields waiting on a missing document are flagged, and progress shows for the checklist, the request and each form; new files detected, customer application
+4. **Insurance team** — Acenda servicing-rights letter generated from the template, cover email
+5. **Wealth team** — HUB24 Change of Adviser, HUB24 Change of Details, Macquarie CMA authority
+6. **Two Weeks Later** — Westpac publishes a new form version: mappings carry over, new and renamed fields are flagged for review and approval, then the forms refill
 
-The four blank ANZ forms (cover sheet, applicant/guarantor declaration, statement of financial position, interview guide) are embedded; the PDF libraries load from cdnjs, so filling and previews need an internet connection.
+The blank provider forms are embedded with adviser details removed; the PDF libraries load from cdnjs, so filling and previews need an internet connection.
 
 Terminology follows the Othello Vault project scope: the **Client** is the advisory firm (Medcentric) and the **Customer** is the household being advised. Customers enter an advice area only after they sign an Authority to Continue for it.
 
